@@ -9,6 +9,14 @@ namespace FYP.Models
     {
         public string CreatedBy { get; set; }
         public string DeletedBy { get; set; }
+        public DateTime DateCreated { get; set; }
         public bool Deleted { get; set; }
+
+        public _CommonAttributes()
+        {
+            CreatedBy = "SYSTEM";
+            DateCreated = DateTime.UtcNow.AddHours(8);
+            Deleted = false;
+        }
     }
 }

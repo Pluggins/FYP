@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace FYP.Models
 {
-    [Table("Menus")]
-    public class Menu : _CommonAttributes
+    [Table("OrderItems")]
+    public class OrderItem : _CommonAttributes
     {
         [Key]
         public string Id { get; set; }
-        public string Name { get; set; }
-        public Vendor Vendor { get; set; }
+        public Order Order { get; set; }
+        public MenuItem MenuItem { get; set; }
+        public double Quantity { get; set; }
     }
 }

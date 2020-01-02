@@ -7,14 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="Areas\Identity\**" />
+    <Compile Remove="Data\Migrations\**" />
     <Content Remove="Areas\Identity\**" />
+    <Content Remove="Data\Migrations\**" />
     <EmbeddedResource Remove="Areas\Identity\**" />
+    <EmbeddedResource Remove="Data\Migrations\**" />
     <None Remove="Areas\Identity\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Data\Migrations\20191121092322_init4.cs" />
-    <Compile Remove="Data\Migrations\20191121092322_init4.Designer.cs" />
+    <None Remove="Data\Migrations\**" />
   </ItemGroup>
 
 
@@ -33,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\" />
-    <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
 </Project>
