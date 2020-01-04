@@ -14,5 +14,11 @@ namespace FYP.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public Vendor Vendor { get; set; }
+        public ICollection<MenuItem> MenuItems { get; set; }
+
+        public Menu()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
     }
 }

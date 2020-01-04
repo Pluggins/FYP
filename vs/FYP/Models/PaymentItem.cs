@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace FYP.Models
 {
-    [Table("OrderItems")]
-    public class OrderItem : _CommonAttributes
+    [Table("PaymentItems")]
+    public class PaymentItem : _CommonAttributes
     {
-        [Key]
         public string Id { get; set; }
-        public Order Order { get; set; }
+        public Payment Payment { get; set; }
         public MenuItem MenuItem { get; set; }
-        public double Quantity { get; set; }
+        public int Quantity { get; set; }
+        public int Status { get; set; }
 
-        public OrderItem()
+        public PaymentItem()
         {
             Id = Guid.NewGuid().ToString();
             Quantity = 0;
+            Status = 0;
         }
     }
 }

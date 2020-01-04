@@ -66,7 +66,15 @@ namespace FYP.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("MenuId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("MenuId");
 
                     b.ToTable("MenuItems");
                 });
@@ -173,6 +181,44 @@ namespace FYP.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("FYP.Models.PaymentItem", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MenuItemId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex("PaymentId");
+
+                    b.ToTable("PaymentItems");
                 });
 
             modelBuilder.Entity("FYP.Models.User", b =>
@@ -471,8 +517,15 @@ namespace FYP.Migrations
             modelBuilder.Entity("FYP.Models.Menu", b =>
                 {
                     b.HasOne("FYP.Models.Vendor", "Vendor")
-                        .WithMany("List_Menu")
+                        .WithMany("Menus")
                         .HasForeignKey("VendorId");
+                });
+
+            modelBuilder.Entity("FYP.Models.MenuItem", b =>
+                {
+                    b.HasOne("FYP.Models.Menu", "Menu")
+                        .WithMany("MenuItems")
+                        .HasForeignKey("MenuId");
                 });
 
             modelBuilder.Entity("FYP.Models.Order", b =>
@@ -489,7 +542,7 @@ namespace FYP.Migrations
                         .HasForeignKey("MenuItemId");
 
                     b.HasOne("FYP.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId");
                 });
 
@@ -498,6 +551,17 @@ namespace FYP.Migrations
                     b.HasOne("FYP.Models.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId");
+                });
+
+            modelBuilder.Entity("FYP.Models.PaymentItem", b =>
+                {
+                    b.HasOne("FYP.Models.MenuItem", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("MenuItemId");
+
+                    b.HasOne("FYP.Models.Payment", "Payment")
+                        .WithMany("PaymentItems")
+                        .HasForeignKey("PaymentId");
                 });
 
             modelBuilder.Entity("FYP.Models.User", b =>

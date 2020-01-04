@@ -16,5 +16,13 @@ namespace FYP.Models
         public string NickName { get; set; }
         public decimal Amount { get; set; }
         public int Status { get; set; }
+        public ICollection<PaymentItem> PaymentItems { get; set; }
+
+        public Payment()
+        {
+            Id = Guid.NewGuid().ToString();
+            Amount = 0;
+            Status = 0;
+        }
     }
 }
