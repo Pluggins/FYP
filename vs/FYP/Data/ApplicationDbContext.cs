@@ -9,7 +9,8 @@ namespace FYP.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public DbSet<User> ApplicationUsers { get; set; }
+        public static byte[] _hashSalt = Convert.FromBase64String("6cm+(w&SK[BQ[~]Bvauyt~+)tSTZV5u<u('&{!]dz8v'-LTNPt?Bx2p)y@:/$u'R");
+        public DbSet<User> _Users { get; set; }
         public DbSet<ApplicationUser> AspNetUsers { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Menu> Menus { get; set; }
@@ -17,6 +18,7 @@ namespace FYP.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<AppLoginSession> AppLoginSessions { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

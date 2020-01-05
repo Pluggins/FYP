@@ -21,7 +21,7 @@ namespace FYP.Controllers.Api
 
         [HttpPost]
         [Route("Api/Order/Create")]
-        public CreateOrderOutput CreateOrder(CreateOrderInput input)
+        public CreateOrderOutput Create([FromBody] CreateOrderInput input)
         {
             CreateOrderOutput output = new CreateOrderOutput();
             Order newOrder = new Order();
@@ -34,7 +34,7 @@ namespace FYP.Controllers.Api
 
             } else if (input.Type == 2)
             {
-                User selectedUser = _db.ApplicationUsers.Where(e => e.Id == input.MemberId).FirstOrDefault();
+                User selectedUser = _db._Users.Where(e => e.Id == input.MemberId).FirstOrDefault();
                 if (selectedUser == null)
                 {
                     output.Status = "USER_NOT_FOUND";
