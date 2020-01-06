@@ -15,8 +15,8 @@ namespace FYP.Models
         public string Name { get; set; }
         public string Email { get; set; }
         [Required]
-        public User Owner { get; set; }
-        public ICollection<Menu> Menus { get; set; }
+        public virtual User Owner { get; set; }
+        public virtual ICollection<Menu> Menus { get; set; }
 
         public Vendor()
         {

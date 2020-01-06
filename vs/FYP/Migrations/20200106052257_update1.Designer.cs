@@ -4,18 +4,20 @@ using FYP.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FYP.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200106052257_update1")]
+    partial class update1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -562,7 +564,7 @@ namespace FYP.Migrations
             modelBuilder.Entity("FYP.Models.Order", b =>
                 {
                     b.HasOne("FYP.Models.User", "User")
-                        .WithMany("ListOrders")
+                        .WithMany()
                         .HasForeignKey("UserId");
                 });
 
@@ -587,7 +589,7 @@ namespace FYP.Migrations
             modelBuilder.Entity("FYP.Models.PaymentItem", b =>
                 {
                     b.HasOne("FYP.Models.MenuItem", "MenuItem")
-                        .WithMany("PaymentItems")
+                        .WithMany()
                         .HasForeignKey("MenuItemId");
 
                     b.HasOne("FYP.Models.Payment", "Payment")

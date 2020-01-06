@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FYP.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,8 +10,9 @@ namespace FYP.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public static byte[] _hashSalt = Convert.FromBase64String("6cm+(w&SK[BQ[~]Bvauyt~+)tSTZV5u<u('&{!]dz8v'-LTNPt?Bx2p)y@:/$u'R");
+        public static string _hashSalt = "XE6uulOqnjQyAwr6YQykF4AMvcQSBOWnjSHB4kQftwCRQTLCzaM22bFndj5DWPO3";
         public DbSet<User> _Users { get; set; }
+        public DbSet<IdentityUser> _AspNetUsers { get; set; }
         public DbSet<ApplicationUser> AspNetUsers { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Menu> Menus { get; set; }
@@ -22,7 +24,6 @@ namespace FYP.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-             
         }
     }
 }

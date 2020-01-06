@@ -12,9 +12,9 @@ namespace FYP.Models
     {
         [Key]
         public string Id { get; set; }
-        public Menu Menu { get; set; }
+        public virtual Menu Menu { get; set; }
         public decimal Price { get; set; }
-        ICollection<PaymentItem> PaymentItems { get; set; }
+        public virtual ICollection<PaymentItem> PaymentItems { get; set; }
 
         public MenuItem()
         {

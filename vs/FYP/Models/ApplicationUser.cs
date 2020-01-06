@@ -8,6 +8,6 @@ namespace FYP.Models
 {
     public partial class ApplicationUser : IdentityUser
     {
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

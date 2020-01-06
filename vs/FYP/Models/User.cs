@@ -19,8 +19,9 @@ namespace FYP.Models
         public string LName { get; set; }
         public int Status { get; set; }
         [Required]
-        public IdentityUser AspNetUser { get; set; }
+        public virtual IdentityUser AspNetUser { get; set; }
         public virtual ICollection<Vendor> ListVendors { get; set; }
+        public virtual ICollection<Order> ListOrders { get; set; }
 
         public User()
         {

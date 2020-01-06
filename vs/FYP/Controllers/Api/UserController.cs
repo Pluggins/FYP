@@ -73,7 +73,7 @@ namespace FYP.Controllers.Api
         }
 
         [HttpPost]
-        [Route("Api/User/Login")]
+        [Route("Api/User/CreateSession")]
         public LoginUserOutput Login([FromBody] LoginUserInput input)
         {
             LoginUserOutput output = new LoginUserOutput();
@@ -82,19 +82,22 @@ namespace FYP.Controllers.Api
                 output.Result = "FIELD_INCOMPLETE";
             } else
             {
-                string aspUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(aspUserId))
+                IdentityUser aspUser = _db._AspNetUsers.FirstOrDefault();
+                if (aspUser == null)
                 {
                     output.Result = "USER_NOT_FOUND";
                 } else
                 {
-                    ApplicationUser user = _db.AspNetUsers.Where(e => e.Id.Equals(aspUserId)).FirstOrDefault();
+                    IdentityUser user = _db._AspNetUsers.Where(e => e.Id.Equals(aspUser.Id)).FirstOrDefault();
                     if (_userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, input.Password) == PasswordVerificationResult.Success)
                     {
                         AppLoginSession newSession = new AppLoginSession(Guid.NewGuid().ToString());
                         newSession.User = _db._Users.Where(e => e.AspNetUser.Equals(user)).FirstOrDefault();
+                        newSession.Status = 1;
                         _db.AppLoginSessions.Add(newSession);
                         _db.SaveChanges();
+                        output.SessionId = newSession.Id;
+                        output.Key = newSession.Key;
                         output.Result = "OK";
                     } else
                     {

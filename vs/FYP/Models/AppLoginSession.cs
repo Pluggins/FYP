@@ -15,16 +15,16 @@ namespace FYP.Models
         [Key]
         public string Id { get; set; }
         public string Key { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public int Status { get; set; }
         public DateTime DateCreated { get; set; }
 
         public AppLoginSession(string key)
         {
             Id = Guid.NewGuid().ToString();
-            Status = 1;
+            Status = 0;
             DateCreated = DateTime.UtcNow.AddHours(8);
-            Key = HashingService.GenerateSHA256(Convert.FromBase64String(key), ApplicationDbContext._hashSalt);
+            Key = HashingService.GenerateSHA256(Convert.FromBase64String(key.Replace("-", "")), Convert.FromBase64String(ApplicationDbContext._hashSalt));
         }
     }
 }

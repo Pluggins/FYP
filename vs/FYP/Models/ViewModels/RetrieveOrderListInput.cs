@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace FYP.Models.ViewModels
 {
-    public class LoginUserOutput
+    public class RetrieveOrderListInput
     {
         public string SessionId { get; set; }
-        public string Key { get; set; }
-        public string Result { get; set; }
+        public string SessionKey { get; set; }
     }
 }

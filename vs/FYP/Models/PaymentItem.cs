@@ -10,8 +10,8 @@ namespace FYP.Models
     public class PaymentItem : _CommonAttributes
     {
         public string Id { get; set; }
-        public Payment Payment { get; set; }
-        public MenuItem MenuItem { get; set; }
+        public virtual Payment Payment { get; set; }
+        public virtual MenuItem MenuItem { get; set; }
         public int Quantity { get; set; }
         public int Status { get; set; }
 
