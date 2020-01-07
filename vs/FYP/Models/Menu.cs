@@ -13,6 +13,7 @@ namespace FYP.Models
         [Key]
         public string Id { get; set; }
         public string Name { get; set; }
+        public string ShortDesc { get; set; }
         public virtual Vendor Vendor { get; set; }
         public virtual ICollection<MenuItem> MenuItems { get; set; }
 

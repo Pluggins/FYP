@@ -14,4 +14,9 @@ namespace FYP.Models.ViewModels
         public string LName { get; set; }
 
     }
+
+    public class CreateUserOutput
+    {
+        public string Status { get; set; }
+    }
 }

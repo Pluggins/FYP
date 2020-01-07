@@ -18,6 +18,13 @@ namespace FYP.Models.ViewModels
         }
     }
 
+    public class CreateOrderOutput
+    {
+        public string OrderId { get; set; }
+        public string Status { get; set; }
+        public User User { get; set; }
+    }
+
     public class CreateOrderItem
     {
         public string ItemId { get; set; }

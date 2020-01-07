@@ -12,6 +12,9 @@ namespace FYP.Models
     {
         [Key]
         public string Id { get; set; }
+        public string Name { get; set; }
+        public string ShortDesc { get; set; }
+        public string LongDesc { get; set; }
         public virtual Menu Menu { get; set; }
         public decimal Price { get; set; }
         public virtual ICollection<PaymentItem> PaymentItems { get; set; }

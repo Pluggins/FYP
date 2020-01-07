@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 
 namespace FYP.Models.ViewModels
 {
+    public class RetrieveOrderListInput
+    {
+        public string SessionId { get; set; }
+        public string SessionKey { get; set; }
+    }
+
     public class RetrieveOrderListOutput
     {
         public string OrderId { get; set; }
