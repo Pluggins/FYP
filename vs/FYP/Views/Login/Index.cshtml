@@ -7,21 +7,35 @@
     <div class="row">
         <div class="col-3"></div>
         <div class="col-6">
-            <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 80px; padding-bottom:30px;">
-                <div style="text-align: center; font-size: 36px;">Control Panel</div>
-                <div style="text-align:center; margin-bottom:20px;">Please login to access to the control panel.</div>
-                <div style="font-size: 17px;margin-bottom: 5px;">
-                    <label for="Email">Email:</label>
-                    <input class="form-control" id="Email" type="email" />
+            <form action="/logout" onsubmit="return login();">
+                <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 80px; padding-bottom:30px;">
+                    <div style="text-align: center; font-size: 36px;">Control Panel</div>
+                    <div style="text-align:center; margin-bottom:20px;">Please login to access to the control panel.</div>
+                    <div style="font-size: 17px;margin-bottom: 5px;">
+                        <label for="Email">Email:</label>
+                        <input class="form-control" id="Email" type="email" />
+                    </div>
+                    <div style="font-size:17px; margin-bottom:20px;">
+                        <label for="Password">Password:</label>
+                        <input class="form-control" id="Password" type="password" />
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <div id="errorFrame" style="display:none;">
+                                    <div id="errorMsg" style="padding:1px; margin-bottom:10px; border:1px solid black; background-color:#ff8383;">
+                                        Error: Wrong Password
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="loginButton">Login Now</button>
+                    </div>
                 </div>
-                <div style="font-size:17px; margin-bottom:20px;">
-                    <label for="Password">Password:</label>
-                    <input class="form-control" id="Password" type="password" />
-                </div>
-                <div style="text-align:center;">
-                    <button class="btn btn-primary" onclick="login();">Login Now</button>
-                </div>
-            </div>
+            </form>
+            
         </div>
         <div class="col-3"></div>
     </div>
@@ -29,14 +43,41 @@
 
 <script>
 function login() {
+    var status = false;
+    $('#loginButton').html('<i class="fas fa-undo fa-spin"></i>');
     $.ajax({
         url: '/Api/User/AdminLogin',
         type: 'POST',
         contentType:"application/json; charset=utf-8",
-        dataType:"json",
+        dataType: "json",
+        async: false,
         data: JSON.stringify({ 'Email': $('#Email').val(), 'Password': $('#Password').val() }),
         success: function (responds) {
+            if (responds.result == "OK") {
+                $('#errorFrame').attr('style', 'display:none;')
+                status = true;
+            } else if (responds.result == "FIELD_INCOMPLETE") {
+                $('#loginButton').html('Login Now');
+                $('#errorFrame').removeAttr('style');
+                $('#errorMsg').html('Error: Please login with your email and password.')
+            } else if (responds.result == "USER_NOT_FOUND") {
+                $('#loginButton').html('Login Now');
+                $('#errorFrame').removeAttr('style');
+                $('#errorMsg').html('Error: Email/password do not match.')
+            } else if (responds.result == "PASSWORD_MISMATCH") {
+                $('#loginButton').html('Login Now');
+                $('#errorFrame').removeAttr('style');
+                $('#errorMsg').html('Error: Email/password do not match.')
+            }
+        },
+        error: function () {
+            $('#loginButton').html('Login Now');
         }
     });
+    if (status) {
+        return true;
+    } else {
+        return false;
+    }
 }
 </script>
