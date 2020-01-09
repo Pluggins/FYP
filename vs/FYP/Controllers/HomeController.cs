@@ -26,7 +26,13 @@ namespace FYP.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index","Login");
+            } else
+            {
+                return View();
+            }
         }
 
         public IActionResult Privacy()

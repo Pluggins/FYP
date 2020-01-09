@@ -59,7 +59,8 @@ namespace FYP.Controllers.Api
                         FName = input.FName,
                         LName = input.LName,
                         Email = input.Email,
-                        AspNetUser = newAspUser
+                        AspNetUser = newAspUser,
+                        Status = 1
                     };
                     _db._Users.Add(newUser);
                     _db.SaveChanges();
@@ -82,17 +83,16 @@ namespace FYP.Controllers.Api
                 output.Result = "FIELD_INCOMPLETE";
             } else
             {
-                IdentityUser aspUser = _db._AspNetUsers.FirstOrDefault();
+                IdentityUser aspUser = _db._AspNetUsers.Where(e => e.UserName.ToLower().Equals(input.Email.ToLower())).FirstOrDefault();
                 if (aspUser == null)
                 {
                     output.Result = "USER_NOT_FOUND";
                 } else
                 {
-                    IdentityUser user = _db._AspNetUsers.Where(e => e.Id.Equals(aspUser.Id)).FirstOrDefault();
-                    if (_userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, input.Password) == PasswordVerificationResult.Success)
+                    if (_userManager.PasswordHasher.VerifyHashedPassword(aspUser, aspUser.PasswordHash, input.Password) == PasswordVerificationResult.Success)
                     {
                         AppLoginSession newSession = new AppLoginSession(Guid.NewGuid().ToString());
-                        newSession.User = _db._Users.Where(e => e.AspNetUser.Equals(user)).FirstOrDefault();
+                        newSession.User = _db._Users.Where(e => e.AspNetUser.Equals(aspUser)).FirstOrDefault();
                         newSession.Status = 1;
                         _db.AppLoginSessions.Add(newSession);
                         _db.SaveChanges();
@@ -106,6 +106,52 @@ namespace FYP.Controllers.Api
                     
                 }
             }
+            return output;
+        }
+
+        [HttpPost]
+        [Route("Api/User/AdminLogin")]
+        public async Task<LoginUserOutput> AdminLogin([FromBody] LoginUserInput input)
+        {
+            LoginUserOutput output = new LoginUserOutput();
+            if (string.IsNullOrEmpty(input.Email) || string.IsNullOrEmpty(input.Password))
+            {
+                output.Result = "FIELD_INCOMPLETE";
+            }
+            else
+            {
+                IdentityUser aspUser = _db._AspNetUsers.Where(e => e.UserName.ToLower().Equals(input.Email.ToLower())).FirstOrDefault();
+                if (aspUser == null)
+                {
+                    output.Result = "USER_NOT_FOUND";
+                }
+                else
+                {
+                    if (_userManager.PasswordHasher.VerifyHashedPassword(aspUser, aspUser.PasswordHash, input.Password) == PasswordVerificationResult.Success)
+                    {
+                        await _signInManager.SignInAsync(aspUser, true);
+                        output.Result = "OK";
+                    }
+                    else
+                    {
+                        output.Result = "PASSWORD_MISMATCH";
+                    }
+
+                }
+            }
+            return output;
+        }
+
+        [HttpPost]
+        [Route("Api/User/Logout")]
+        public async Task<LoginUserOutput> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            LoginUserOutput output = new LoginUserOutput()
+            {
+                Result = "OK"
+            };
+
             return output;
         }
     }

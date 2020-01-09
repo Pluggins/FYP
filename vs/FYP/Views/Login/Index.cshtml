@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div style="padding:120px 0px; padding-bottom:150px;">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 80px; padding-bottom:30px;">
+                <div style="text-align: center; font-size: 36px;">Control Panel</div>
+                <div style="text-align:center; margin-bottom:20px;">Please login to access to the control panel.</div>
+                <div style="font-size: 17px;margin-bottom: 5px;">
+                    <label for="Email">Email:</label>
+                    <input class="form-control" id="Email" type="email" />
+                </div>
+                <div style="font-size:17px; margin-bottom:20px;">
+                    <label for="Password">Password:</label>
+                    <input class="form-control" id="Password" type="password" />
+                </div>
+                <div style="text-align:center;">
+                    <button class="btn btn-primary" onclick="login();">Login Now</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+<script>
+function login() {
+    $.ajax({
+        url: '/Api/User/AdminLogin',
+        type: 'POST',
+        contentType:"application/json; charset=utf-8",
+        dataType:"json",
+        data: JSON.stringify({ 'Email': $('#Email').val(), 'Password': $('#Password').val() }),
+        success: function (responds) {
+        }
+    });
+}
+</script>
