@@ -1,4 +1,8 @@
 ﻿function logout() {
+    $('#logoutLabel1').html('<i class="fas fa-spinner fa-spin"></i>');
+    $('#logoutLabel2').html('<i class="fas fa-spinner fa-spin"></i>');
+    $('#logoutButton1').attr('class','nav-link disabled');
+    $('#logoutButton2').attr('class','btn btn-danger disabled');
     $.ajax({
         url: '/Api/User/Logout',
         type: 'POST',
@@ -7,24 +11,21 @@
         async: false,
         success: function (responds) {
             if (responds.result == "OK") {
-                $('#errorFrame').attr('style', 'display:none;')
-                status = true;
-            } else if (responds.result == "FIELD_INCOMPLETE") {
-                $('#loginButton').html('Login Now');
-                $('#errorFrame').removeAttr('style');
-                $('#errorMsg').html('Error: Please login with your email and password.')
-            } else if (responds.result == "USER_NOT_FOUND") {
-                $('#loginButton').html('Login Now');
-                $('#errorFrame').removeAttr('style');
-                $('#errorMsg').html('Error: Email/password do not match.')
-            } else if (responds.result == "PASSWORD_MISMATCH") {
-                $('#loginButton').html('Login Now');
-                $('#errorFrame').removeAttr('style');
-                $('#errorMsg').html('Error: Email/password do not match.')
-            }
+                $('#logoutLabel1').html('Logged Out');
+                $('#logoutLabel2').html('Logged Out');
+            } 
+
+            setTimeout(logoutRedirect, 1000);
         },
         error: function () {
-            $('#loginButton').html('Login Now');
+            $('#logoutLabel1').html('Logout');
+            $('#logoutLabel2').html('Logout');
+            $('#logoutButton1').attr('class', 'nav-link');
+            $('#logoutButton2').attr('class', 'btn btn-danger');
         }
     });
+}
+
+function logoutRedirect() {
+    window.location.replace("/");
 }

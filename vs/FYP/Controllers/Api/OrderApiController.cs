@@ -11,11 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FYP.Controllers.Api
 {
-    public class OrderController : Controller
+    public class OrderApiController : Controller
     {
         private readonly ApplicationDbContext _db;
 
-        public OrderController(ApplicationDbContext db)
+        public OrderApiController(ApplicationDbContext db)
         {
             _db = db;
         }

@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FYP.Controllers.Api
 {
-    public class MenuController : Controller
+    public class MenuApiController : Controller
     {
         private readonly ApplicationDbContext _db;
 
-        public MenuController(
+        public MenuApiController(
             ApplicationDbContext db)
         {
             _db = db;

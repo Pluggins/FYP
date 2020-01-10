@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FYP.Controllers.Api
 {
-    public class UserController : Controller
+    public class UserApiController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ApplicationDbContext _db;
 
-        public UserController(
+        public UserApiController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ApplicationDbContext db)

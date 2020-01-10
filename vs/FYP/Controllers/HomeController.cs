@@ -31,7 +31,7 @@ namespace FYP.Controllers
                 return RedirectToAction("Index","Login");
             } else
             {
-                return View();
+                return RedirectToAction("Index", "Vendor");
             }
         }
 
