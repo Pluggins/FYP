@@ -5,7 +5,7 @@
 }
 
 input {
-    background-color: #fff3ed !important;
+    background-color: #fff !important;
     border: 1px solid #a98e80 !important;
 }
 
@@ -48,6 +48,19 @@ body {
     color: #fff;
     background-color: #529d63;
     border-color: #2b6037;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #635335;
+    border-color: #59371e;
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+    color: #fff;
+    background-color: #9c4f2a;
+    border-color: #9c4d26;
 }
 
 /*

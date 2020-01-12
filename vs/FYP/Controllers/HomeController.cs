@@ -31,7 +31,13 @@ namespace FYP.Controllers
                 return RedirectToAction("Index","Login");
             } else
             {
-                return RedirectToAction("Index", "Vendor");
+                if (User.IsInRole("Staff"))
+                {
+                    return RedirectToAction("Index", "Vendor");
+                } else
+                {
+                    return RedirectToAction("Index", "Menu");
+                }
             }
         }
 

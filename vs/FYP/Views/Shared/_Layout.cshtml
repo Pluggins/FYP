@@ -24,15 +24,12 @@
                 <ul class="navbar-nav mr-auto">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item @(ViewBag.Nav == 1 ? "active" : null)"><a href="@(ViewBag.Nav == 1 ? "/staff/vendor" : "#")" class="nav-link">Vendors</a></li>
-                        <li class="nav-item @(ViewBag.Nav == 2 ? "active" : null)"><a href="@(ViewBag.Nav == 2 ? "/staff/vendor" : "#")" class="nav-link">Menus</a></li>
-                        <li class="nav-item @(ViewBag.Nav == 3 ? "active" : null)"><a href="@(ViewBag.Nav == 3 ? "/staff/vendor" : "#")" class="nav-link">Orders</a></li>
-                    }
-                    else
-                    {
-                        <li class="nav-item @(ViewBag.Nav == 1 ? "active" : null)"><a href="@(ViewBag.Nav == 1 ? "/staff/vendor" : "#")" class="nav-link disabled">Vendors</a></li>
-                        <li class="nav-item @(ViewBag.Nav == 2 ? "active" : null)"><a href="@(ViewBag.Nav == 2 ? "/staff/vendor" : "#")" class="nav-link disabled">Menus</a></li>
-                        <li class="nav-item @(ViewBag.Nav == 3 ? "active" : null)"><a href="@(ViewBag.Nav == 3 ? "/staff/vendor" : "#")" class="nav-link disabled">Orders</a></li>
+                        if (User.IsInRole("Staff"))
+                        {
+                            <li class="nav-item @(ViewBag.Nav == 1 ? "active" : null)"><a href="/Vendor" class="nav-link">Vendors</a></li>
+                        }
+                        <li class="nav-item @(ViewBag.Nav == 2 ? "active" : null)"><a href="/Menu" class="nav-link">Menus</a></li>
+                        <li class="nav-item @(ViewBag.Nav == 3 ? "active" : null)"><a href="#" class="nav-link">Orders</a></li>
                     }
 
                     @if (User.Identity.IsAuthenticated)

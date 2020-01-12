@@ -26,7 +26,7 @@ namespace FYP.Models
         public User()
         {
             Id = Guid.NewGuid().ToString();
-            Status = 0;
+            Status = 1;
         }
     }
 }
