@@ -73,7 +73,7 @@ namespace FYP.Controllers.Api
                 output.Result = "NO_PRIVILEGE";
             } else
             {
-                User user = _db._Users.Where(e => e.Email.ToLower().Equals(input.Email)).FirstOrDefault();
+                User user = _db._Users.Where(e => e.Email.ToLower().Equals(input.Email) && e.Deleted == false).FirstOrDefault();
                 if (user == null)
                 {
                     output.Result = "USER_NOT_FOUND";
@@ -85,6 +85,59 @@ namespace FYP.Controllers.Api
                     output.Result = "OK";
                 }
             }
+            return output;
+        }
+
+        [HttpPost]
+        [Route("Api/Vendor/RetrieveById")]
+        public VendorInfoOutput RetrieveById([FromBody] VendorInfoInput input)
+        {
+            VendorInfoOutput output = new VendorInfoOutput();
+            User staff = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
+            if (staff.Status < 2)
+            {
+                output.Result = "NO_PRIVILEGE";
+            } else
+            {
+                Vendor vendor = _db.Vendors.Where(e => e.Id.Equals(input.Id)).FirstOrDefault();
+                if (vendor == null)
+                {
+                    output.Result = "NOT_FOUND";
+                }
+                else
+                {
+                    output.Vendor = vendor;
+                    output.Result = "OK";
+                }
+            }
+            return output;
+        }
+
+        [HttpPost]
+        [Route("Api/Vendor/DeleteById")]
+        public VendorInfoOutput DeleteById([FromBody] VendorInfoInput input)
+        {
+            VendorInfoOutput output = new VendorInfoOutput();
+            User staff = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
+            if (staff.Status < 2)
+            {
+                output.Result = "NO_PRIVILEGE";
+            } else
+            {
+                Vendor vendor = _db.Vendors.Where(e => e.Id.Equals(input.Id) && e.Deleted == false).FirstOrDefault();
+                if (vendor == null)
+                {
+                    output.Result = "NOT_FOUND";
+                }
+                else
+                {
+                    vendor.Deleted = true;
+                    vendor.DeletedBy = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().Id;
+                    _db.SaveChanges();
+                    output.Result = "OK";
+                }
+            }
+
             return output;
         }
     }

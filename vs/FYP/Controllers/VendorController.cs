@@ -27,7 +27,7 @@ namespace FYP.Controllers
             } else
             {
                 List<Vendor> vendorList = new List<Vendor>();
-                vendorList = _db.Vendors.OrderByDescending(e => e.DateCreated).ToList();
+                vendorList = _db.Vendors.Where(e => e.Deleted == false).OrderByDescending(e => e.DateCreated).ToList();
                 ViewBag.Nav = 1;
                 return View(vendorList);
             }

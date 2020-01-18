@@ -63,6 +63,14 @@ body {
     border-color: #9c4d26;
 }
 
+.nav-target {
+    font-weight: 600;
+}
+
+.nav-separator {
+    margin: 0 10px;
+}
+
 /*
 *
 * ==========================================

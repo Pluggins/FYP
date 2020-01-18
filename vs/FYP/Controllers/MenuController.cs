@@ -22,7 +22,7 @@ namespace FYP.Controllers
 
         public IActionResult Index()
         {
-            List<Vendor> vendorList = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.OrderBy(e => e.DateCreated).ToList();
+            List<Vendor> vendorList = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.DateCreated).ToList();
             if (vendorList.Count == 0)
             {
                 ViewBag.Nav = 2;
@@ -37,7 +37,7 @@ namespace FYP.Controllers
         [Route("Menu/Edit/{id}")]
         public IActionResult Edit(string id) 
         {
-            Vendor vendor = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Id.Equals(id)).FirstOrDefault();
+            Vendor vendor = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Id.Equals(id) && e.Deleted == false).FirstOrDefault();
             if (vendor == null)
             {
                 return RedirectToAction("Index", "Menu");
@@ -46,8 +46,8 @@ namespace FYP.Controllers
                 ViewBag.Nav = 2;
                 MenuListViewModel model = new MenuListViewModel();
                 model.SelectedVendor = vendor;
-                model.Vendors = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.OrderBy(e => e.DateCreated).ToList();
-                model.Menus =  vendor.Menus.ToList();
+                model.Vendors = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.DateCreated).ToList();
+                model.Menus =  vendor.Menus.Where(e => e.Deleted == false).OrderByDescending(e => e.DateCreated).ToList();
                 return View(model);
             }
         }

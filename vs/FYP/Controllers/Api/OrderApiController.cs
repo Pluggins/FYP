@@ -94,7 +94,7 @@ namespace FYP.Controllers.Api
             SessionService session = new SessionService(_db, input.SessionId, input.SessionKey);
             if (session.IsValid)
             {
-                List<Order> orders = _db._Users.Where(e => e.Id.Equals(session.User.Id)).FirstOrDefault().ListOrders.ToList();
+                List<Order> orders = _db._Users.Where(e => e.Id.Equals(session.User.Id)).FirstOrDefault().ListOrders.Where(e => e.Deleted == false).ToList();
                 List<RetrieveOrderListOutput> output = new List<RetrieveOrderListOutput>();
                 foreach(Order item in orders)
                 {

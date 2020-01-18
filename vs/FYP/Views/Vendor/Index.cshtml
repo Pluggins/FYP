@@ -29,7 +29,7 @@
                 <tr>
                     <td style="vertical-align:middle;">@item.Name</td>
                     <td style="vertical-align:middle;">@item.Email</td>
-                    <td><button class="btn btn-danger" onclick="deleteVendor('@item.Id')">Delete</button></td>
+                    <td><button class="btn btn-danger" id="m-@item.Id" onclick="deleteVendor('@item.Id',this)">Delete</button></td>
                 </tr>
                 }
             </tbody>
@@ -88,147 +88,21 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="text-align:center;">
                 Are you sure you want to delete the following vendor?
-                <div>
-                    Vendor name: 
+                <div style="margin:0 auto; width:50%; padding:10px;">
+                    <div style="text-align:center; border:1px solid black; padding:10px; background-color:#e8e8e8;">
+                        Vendor name: <span id="vendorNameConfirmation"></span>
+                    </div>
                 </div>
+                
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" id="deleteConfirmButton" onclick="initiateDeleteVendor(vendorDeletingId)">Delete Now</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    var vendorChecking = false;
-    var vendorCreating = false;
-
-    $(document).ready(function () {
-        $('#vendorList').DataTable({
-            'order': [[2,"asc"]],
-            "columnDefs": [
-              { "width": "200px", "targets": 0 },
-              { "width": "300px", "targets": 1 },
-              { "width": "20px", "targets": 2 }
-            ],
-        });
-    });
-
-    $('#Email').on("keypress", function (e) {
-        if (e.which == 13) {
-            checkUser();
-        }
-    });
-
-    function createVendor() {
-        if (!vendorCreating) {
-            vendorCreating = true;
-            $('#createVendorButton').html('<i class="fas fa-spinner fa-spin"></i>');
-            $('#createVendorButton').removeAttr('onclick');
-            $('#createVendorButton').attr('class', 'btn btn-primary disabled');
-            $.ajax({
-                url: '/Api/Vendor/Create',
-                type: 'POST',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,
-                data: JSON.stringify({ 'Email': $('#Email').val(), 'Name': $('#Name').val() }),
-                success: function (responds) {
-                    if (responds.result == "OK") {
-                        $('#errorFrame').attr('style', 'background-color: #f3ffe5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                        $('#errorMsg').html('<div style="text-align: center;">Vendor has been successfully created.</div>');
-                        $('#createVendorButton').html('Created');
-                        setTimeout(function () { window.location.replace("/Vendor"); }, 2000);
-                    } else if (responds.result == "FIELD_INCOMPLETE") {
-                        $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                        $('#errorMsg').html('<div style="text-align: center;">Please enter new vendor name and email.</div>');
-                        $('#createVendorButton').attr('onclick','createVendor()');
-                        $('#createVendorButton').attr('class', 'btn btn-primary');
-                        $('#createVendorButton').html('Create');
-                    } else if (responds.result == "USER_NOT_FOUND") {
-                        $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                        $('#errorMsg').html('<div style="text-align: center;">User does not exist.</div>');
-                        $('#createVendorButton').attr('onclick','createVendor()');
-                        $('#createVendorButton').attr('class', 'btn btn-primary');
-                        $('#createVendorButton').html('Create');
-                    }
-                },
-                error: function () {
-                    $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                    $('#errorMsg').html('<div style="text-align: center;">Server not responding, please try again later.</div>')
-                }
-            });
-            vendorCreating = false;
-        }
-        return false;
-    }
-
-    function checkUser() {
-        if (!vendorChecking) {
-            if ($('#Email').val().length < 1 || $('#Name').val().length < 1) {
-                $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                $('#errorMsg').html('<div style="text-align: center;">Please fill in new vendor email and password.</div>');
-            } else {
-                vendorChecking = true;
-                $('#searchBtn').html('<i class="fas fa-spinner fa-spin"></i>');
-                $.ajax({
-                    url: '/Api/Vendor/CheckUser',
-                    type: 'POST',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    async: false,
-                    data: JSON.stringify({ 'Email': $('#Email').val() }),
-                    success: function (responds) {
-                        if (responds.result == "OK") {
-                            $('#errorFrame').attr('style', 'background-color: #f3ffe5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                            $('#errorMsg').html('<div style="font-size:20px; margin-bottom:5px;">User Details</div>User ID: ' + responds.userID + '<br />First Name: ' + responds.firstName + '<br />Last Name: ' + responds.lastName + '<br />');
-                        } else if (responds.result == "USER_NOT_FOUND") {
-                            $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                            $('#errorMsg').html('<div style="text-align: center;">User does not exist.</div>');
-                        } else if (responds.result == "NO_PRIVILEGE") {
-                            window.location.replace("/login");
-                        }
-                    },
-                    error: function () {
-                    }
-                });
-                vendorChecking = false;
-                $('#searchBtn').html('<i class="fas fa-search"></i>');
-            }
-        }
-    }
-
-    function reinitializeVendor() {
-        $('#Email').val('');
-        $('#Name').val('');
-        $('#errorFrame').attr('style', 'display:none;');
-    }
-
-    function deleteVendor(id) {
-        $.ajax({
-            url: '/Api/Vendor/CheckUser',
-            type: 'POST',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            async: false,
-            data: JSON.stringify({ 'Email': $('#Email').val() }),
-            success: function (responds) {
-                if (responds.result == "OK") {
-                    $('#errorFrame').attr('style', 'background-color: #f3ffe5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                    $('#errorMsg').html('<div style="font-size:20px; margin-bottom:5px;">User Details</div>User ID: ' + responds.userID + '<br />First Name: ' + responds.firstName + '<br />Last Name: ' + responds.lastName + '<br />');
-                } else if (responds.result == "USER_NOT_FOUND") {
-                    $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                    $('#errorMsg').html('<div style="text-align: center;">User does not exist.</div>');
-                } else if (responds.result == "NO_PRIVILEGE") {
-                    window.location.replace("/login");
-                }
-            },
-            error: function () {
-            }
-        });
-        $('#deleteVendorModal').modal('show');
-    }
-</script>
+<script src="~/js/vendor.js"></script>
