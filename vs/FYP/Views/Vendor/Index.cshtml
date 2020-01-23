@@ -11,7 +11,7 @@
 </div>
 <div style="padding:30px 50px;">
     <div style="margin-bottom:10px; width:100%; height:50px;">
-        <div class="btn btn-success btn-circle" style="float:right;" data-toggle="modal" data-target="#addVendorModal" onclick="reinitializeVendor()"><i class="fas fa-plus" style="font-size:17px;"></i></div>
+        <div class="btn btn-success btn-circle" style="float:right;" onclick="reinitializeVendor()"><i class="fas fa-plus" style="font-size:17px;"></i></div>
     </div>
 
     <div>
@@ -27,8 +27,8 @@
                 @foreach(Vendor item in Model)
                 {
                 <tr>
-                    <td style="vertical-align:middle;">@item.Name</td>
-                    <td style="vertical-align:middle;">@item.Email</td>
+                    <td>@item.Name</td>
+                    <td>@item.Email</td>
                     <td><button class="btn btn-danger" id="m-@item.Id" onclick="deleteVendor('@item.Id',this)">Delete</button></td>
                 </tr>
                 }
@@ -50,15 +50,17 @@
                         <div class="row">
                             <div class="col-1"></div>
                             <div class="col-10">
-                                <div style="font-size: 17px;margin-bottom: 10px;">
-                                    <label for="Name">Vendor Name:</label>
-                                    <input class="form-control" id="Name" type="text" />
-                                </div>
-                                <div style="font-size:17px; margin-bottom:10px;">
-                                    <label for="Email">Vendor Email:</label>
-                                    <div class="input-group">
-                                        <input class="form-control" id="Email" type="email" />
-                                        <div class="input-group-append"><span class="btn btn-warning" onclick="checkUser()" id="searchBtn"><i class="fas fa-search"></i></span></div>
+                                <div class="form-box">
+                                    <div>
+                                        <label for="Name">Vendor Name:</label>
+                                        <input class="form-control" id="Name" type="text" />
+                                    </div>
+                                    <div>
+                                        <label for="Email">Vendor Email:</label>
+                                        <div class="input-group">
+                                            <input class="form-control" id="Email" type="email" />
+                                            <div class="input-group-append"><span class="btn btn-warning" onclick="checkUser()" id="searchBtn"><i class="fas fa-search"></i></span></div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div id="errorFrame" style="display:none;">
@@ -71,8 +73,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" id="createVendorButton" onclick="createVendor()">Create</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
         </div>

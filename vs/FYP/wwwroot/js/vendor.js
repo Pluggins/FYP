@@ -102,6 +102,8 @@ function reinitializeVendor() {
     $('#Email').val('');
     $('#Name').val('');
     $('#errorFrame').attr('style', 'display:none;');
+    $('#addVendorModal').modal('show');
+    setTimeout(function () { document.getElementById('Name').focus(); }, 500);
 }
 
 function deleteVendor(id, ele) {

@@ -1,0 +1,252 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+@model FYP.Models.ViewModels.MenuItemListViewModel
+
+<div class="theme-title">
+    <div>
+        @Model.Menu.Name
+    </div>
+</div>
+
+<div style="padding:30px 50px;">
+    <div class="bread-crumb"><span><a href="/Menu">Menus</a></span><span class="bread-separator">-></span><span><a href="/Menu/Edit/@Model.Vendor.Id">@Model.Vendor.Name</a></span><span class="bread-separator">-></span><span class="bread-target"><a href="/MenuItem/@Model.Menu.Id">@Model.Menu.Name</a></span></div>
+    <div style="height:90px;">
+        <div class="btn btn-primary" style="float:right;" onclick="createNewItemModal()">Create New Item</div>
+    </div>
+    <div>
+        @{
+            int count = Model.MenuItems.Count;
+            if (count == 0)
+            {
+                <div style="height:350px;">
+                    <div style="width:70%; margin:0 auto; margin-top:20px; position:relative;height: 280px; border: 2px solid black;text-align:center;background-color:#ffa8a8;border-radius:10px;">
+                        <div style="width: 100%; position: absolute; top: 50%; -ms-transform: translateY(-50%); transform: translateY(-50%);">
+                            <img src="~/lib/icons/construction-and-tools.png" width="100" />
+                            <div style="font-size:32px; margin-top:19px;">The menu is empty.</div>
+                            <div style="font-size:20px;">Create a new item to have it shown here!</div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @while (count > 0)
+                {
+                    MenuItem item2 = null;
+                    MenuItem item3 = null;
+                    MenuItem item4 = null;
+                    MenuItem item1 = Model.MenuItems.ElementAt(count - 1);
+
+                    if (count >= 4)
+                    {
+                        item2 = Model.MenuItems.ElementAt(count - 2);
+                        item3 = Model.MenuItems.ElementAt(count - 3);
+                        item4 = Model.MenuItems.ElementAt(count - 4);
+                        count -= 4;
+                    }
+                    else if (count >= 3)
+                    {
+                        item2 = Model.MenuItems.ElementAt(count - 2);
+                        item3 = Model.MenuItems.ElementAt(count - 3);
+                        count -= 3;
+                    }
+                    else if (count >= 2)
+                    {
+                        item2 = Model.MenuItems.ElementAt(count - 2);
+                        count -= 2;
+                    } else
+                    {
+                        count--;
+                    }
+
+                    <div class="row" style="margin-bottom:30px;">
+                        <div class="col-3">
+                            <div class="item-card">
+                                <div>
+                                    <div class="btn btn-danger btn-circle btn-circle-sm btn-icon"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                                </div>
+                                <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                                </div>
+                                <div class="item-label-box">
+                                    <div class="item-label">
+                                        @item1.Name
+                                    </div>
+                                </div>
+                                <div class="item-price">RM @item1.Price</div>
+                            </div>
+                        </div>
+                        @if (item2 != null)
+                        {
+                            <div class="col-3">
+                                <div class="item-card">
+                                    <div>
+                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                                    </div>
+                                    <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                                    </div>
+                                    <div class="item-label-box">
+                                        <div class="item-label">
+                                            @item2.Name
+                                        </div>
+                                    </div>
+                                    <div class="item-price">RM @item2.Price</div>
+                                </div>
+                            </div>
+                        }
+                        @if (item3 != null)
+                        {
+                            <div class="col-3">
+                                <div class="item-card">
+                                    <div>
+                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                                    </div>
+                                    <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                                    </div>
+                                    <div class="item-label-box">
+                                        <div class="item-label">
+                                            @item3.Name
+                                        </div>
+                                    </div>
+                                    <div class="item-price">RM @item3.Price</div>
+                                </div>
+                            </div>
+                        }
+                        @if (item4 != null)
+                        {
+                            <div class="col-3">
+                                <div class="item-card">
+                                    <div>
+                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                                    </div>
+                                    <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                                    </div>
+                                    <div class="item-label-box">
+                                        <div class="item-label">
+                                            @item4.Name
+                                        </div>
+                                    </div>
+                                    <div class="item-price">RM @item4.Price</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div style="background-color:#ffb26e1f;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add New Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <div class="form-box">
+                                <div>
+                                    <label for="Name">Item Name:</label>
+                                    <input class="form-control" id="Name" type="text" />
+                                </div>
+                                <div>
+                                    <label for="Price">Unit Price:</label>
+                                    <input class="form-control" id="Price" type="text" />
+                                </div>
+                                <div>
+                                    <label for="Desc">Description:</label>
+                                    <textarea class="form-control" id="Desc"></textarea>
+                                </div>
+                            </div>
+                            <div id="errorFrame" style="display:none;">
+                                <div id="errorMsg">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="createItemButton" onclick="initiateCreateNewItem()">Add</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var menuId = '@Model.Menu.Id';
+    var creatingMenuItem = false;
+
+    function createNewItemModal() {
+        reinitializeCreateNewItem();
+        $('#addItemModal').modal('show');
+    }
+
+    function reinitializeCreateNewItem() {
+        $('#Name').val('');
+        $('#Price').val('');
+        $('#Desc').val('');
+        $('#errorFrame').attr('style', 'display:none;');
+    }
+
+    function initiateCreateNewItem() {
+        if (!creatingMenuItem) {
+            creatingMenuItem = true;
+            if ($('#Name').val().length < 1 || $('#Price').val().length < 1 || $('#Desc').val().length < 1) {
+                $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
+                $('#errorMsg').html('<div style="text-align: center;">Please enter the item name, unit price and description.</div>');
+                creatingMenuItem = false;
+            } else {
+                $('#createItemButton').attr('class', 'btn btn-primary disabled');
+                $('#createItemButton').html('<i class="fas fa-spinner fa-spin"></i>');
+                $.ajax({
+                    url: '/Api/MenuItem/Create',
+                    type: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    data: JSON.stringify({ 'MenuId': menuId, 'ItemName': $('#Name').val() , 'Price': $('#Price').val(), 'Desc': $('#Desc').val()}),
+                    success: function (responds) {
+                        if (responds.result == "OK") {
+                            $('#createItemButton').attr('class', 'btn btn-success disabled');
+                            $('#createItemButton').html('Created');
+                            setTimeout(function () { window.location.replace("/MenuItem/" + menuId); }, 2000);
+                        } else if (responds.result == "DOES_NOT_EXIST") {
+                            $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
+                            $('#errorMsg').html('<div style="text-align: center;">Internal error: Please try again later.</div>');
+                            $('#createItemButton').attr('class', 'btn btn-primary');
+                            $('#createItemButton').html('Add');
+                            creatingMenuItem = false;
+                        } else if (responds.result == "PARSING_ERROR") {
+                            $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
+                            $('#errorMsg').html('<div style="text-align: center;">Input error: Price must be in numbers.</div>');
+                            $('#createItemButton').attr('class', 'btn btn-primary');
+                            $('#createItemButton').html('Add');
+                            creatingMenuItem = false;
+                        } else if (responds.result == "NO_PRIVILEGE") {
+                            $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
+                            $('#errorMsg').html('<div style="text-align: center;">Internal error: Please try again later.</div>');
+                            $('#createItemButton').attr('class', 'btn btn-primary');
+                            $('#createItemButton').html('Add');
+                            creatingMenuItem = false;
+                        }
+                        deletingMenu = false;
+                    },
+                    error: function () {
+                    }
+                });
+            }
+        }
+    }
+</script>

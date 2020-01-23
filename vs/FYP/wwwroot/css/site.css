@@ -1,10 +1,23 @@
-﻿.btn-primary {
+﻿/*
+*
+* ==========================================
+* OVERRIDE BOOTSTRAP
+* ==========================================
+*
+*/
+
+.btn-primary {
     color: #fff;
     background-color: #c26a3f;
     border-color: #7d4028;
 }
 
 input {
+    background-color: #fff !important;
+    border: 1px solid #a98e80 !important;
+}
+
+textarea {
     background-color: #fff !important;
     border: 1px solid #a98e80 !important;
 }
@@ -63,14 +76,6 @@ body {
     border-color: #9c4d26;
 }
 
-.nav-target {
-    font-weight: 600;
-}
-
-.nav-separator {
-    margin: 0 10px;
-}
-
 /*
 *
 * ==========================================
@@ -112,4 +117,101 @@ body {
     height: 70px;
     line-height: 70px;
     font-size: 1.3rem;
+}
+
+/*
+*
+* ==========================================
+* CUSTOM CLASSES
+* ==========================================
+*
+*/
+
+.theme-title {
+    height: 120px;
+    background-color: #624949;
+    position: relative;
+}
+
+.theme-title div {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 40px;
+    color: white;
+    top: 30%;
+}
+
+.bread-crumb {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.bread-crumb a {
+    color: #743939;
+}
+
+.bread-crumb .bread-separator {
+    margin: 0 10px;
+}
+
+.bread-crumb .bread-target {
+    font-weight: 600;
+}
+
+.item-card {
+    border: 1px solid black;
+    background-color: #ffeded;
+    height: 330px;
+    position: relative;
+}
+
+.item-card .btn-icon {
+    position: absolute;
+    right: -5%;
+    top: -5%;
+    z-index: 6;
+    border: 1px solid #7c3939
+}
+
+.item-card .item-label-box {
+    position: absolute;
+    bottom: 15%;
+    height: 20%;
+    width: 100%;
+    text-align: center;
+}
+
+.item-card .item-label {
+    position: absolute;
+    line-height: 18px;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 17px;
+    width: 90%;
+}
+
+.item-card .item-price {
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    background-color: white;
+    position: absolute;
+    bottom: 3%;
+    right: 0%;
+    font-size: 20px;
+    padding: 2px 20px;
+    color: white;
+    background-color: #50778e;
+}
+
+.form-box div {
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+td {
+    vertical-align: middle !important;
 }

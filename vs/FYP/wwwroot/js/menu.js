@@ -14,6 +14,12 @@ $(document).ready(function () {
     });
 });
 
+$('#Name').on("keypress", function (e) {
+    if (e.which == 13) {
+        createMenu();
+    }
+});
+
 function createMenu() {
     if (!creatingMenu) {
         if ($('#Name').val().length > 0) {
@@ -54,6 +60,9 @@ function createMenu() {
 
 function reinitializeMenuCreation() {
     $('#Name').val('');
+    $('#addMenuModalTitle').modal('show');
+    $('#errorFrame').attr('style', 'display:none;');
+    setTimeout(function () { document.getElementById('Name').focus(); }, 500);
 }
 
 function deleteMenu(id, ele) {
@@ -69,7 +78,7 @@ function deleteMenu(id, ele) {
             data: JSON.stringify({ 'MenuId': id }),
             success: function (responds) {
                 if (responds.result == "OK") {
-                    $('#menuNameConfirmation').html(responds.menu.name);
+                    $('#menuNameConfirmation').html(responds.menuName);
                     $('#deleteMenuModal').modal('show');
                     $('#' + ele.id).html('Delete');
                     menuDeletingId = id;

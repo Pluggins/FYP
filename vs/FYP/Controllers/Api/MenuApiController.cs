@@ -103,7 +103,7 @@ namespace FYP.Controllers.Api
             {
                 if (menu.Vendor.Owner == user || user.Status > 1)
                 {
-                    output.Menu = menu;
+                    output.MenuName = menu.Name;
                     output.Result = "OK";
                 }
                 else
