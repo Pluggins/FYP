@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FYP.Data;
 using FYP.Models;
 using FYP.Models.ViewModels;
+using FYP.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,8 +28,8 @@ namespace FYP.Controllers.Api
         public CreateVendorOutput Index([FromBody] CreateVendorInput input)
         {
             CreateVendorOutput output = new CreateVendorOutput();
-            User staff = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
-            if (staff.Status < 2)
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (!aspUser.IsStaff)
             {
                 output.Result = "NO_PRIVILEGE";
             } else
@@ -51,7 +52,7 @@ namespace FYP.Controllers.Api
                             Name = input.Name,
                             Email = input.Email,
                             Owner = user,
-                            CreatedBy = staff.Id
+                            CreatedBy = aspUser.User.Id
                         };
                         _db.Vendors.Add(vendor);
                         _db.SaveChanges();
@@ -67,8 +68,8 @@ namespace FYP.Controllers.Api
         public VendorCheckUserOutput CheckUser([FromBody] VendorCheckUserInput input)
         {
             VendorCheckUserOutput output = new VendorCheckUserOutput();
-            User staff = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
-            if (staff.Status < 2)
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (!aspUser.IsStaff)
             {
                 output.Result = "NO_PRIVILEGE";
             } else
@@ -93,8 +94,8 @@ namespace FYP.Controllers.Api
         public VendorInfoOutput RetrieveById([FromBody] VendorInfoInput input)
         {
             VendorInfoOutput output = new VendorInfoOutput();
-            User staff = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
-            if (staff.Status < 2)
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (!aspUser.IsStaff)
             {
                 output.Result = "NO_PRIVILEGE";
             } else
@@ -118,8 +119,8 @@ namespace FYP.Controllers.Api
         public VendorInfoOutput DeleteById([FromBody] VendorInfoInput input)
         {
             VendorInfoOutput output = new VendorInfoOutput();
-            User staff = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
-            if (staff.Status < 2)
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (!aspUser.IsStaff)
             {
                 output.Result = "NO_PRIVILEGE";
             } else

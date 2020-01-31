@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 using FYP.Data;
 using FYP.Models;
 using FYP.Models.ViewModels;
+using FYP.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FYP.Controllers.Api
 {
+    [Authorize]
     public class MenuApiController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -26,6 +29,7 @@ namespace FYP.Controllers.Api
         {
             RetrieveMenuListOutput output = new RetrieveMenuListOutput();
             List<MenuItemOutput> items = new List<MenuItemOutput>();
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (input != null)
             {
                 Vendor vendor = _db.Vendors.Where(e => e.Id.Equals(input.VendorId) && e.Deleted == false).FirstOrDefault();
@@ -34,19 +38,25 @@ namespace FYP.Controllers.Api
                     output.Status = "VENDOR_NOT_FOUND";
                 } else
                 {
-                    List<Menu> menuList = vendor.Menus.Where(e => e.Deleted == false).ToList();
-                    foreach (Menu item in menuList)
+                    if (vendor.Owner == aspUser.User || aspUser.IsStaff)
                     {
-                        MenuItemOutput sOutput = new MenuItemOutput()
+                        List<Menu> menuList = vendor.Menus.Where(e => e.Deleted == false).ToList();
+                        foreach (Menu item in menuList)
                         {
-                            Id = item.Id,
-                            Name = item.Name,
-                            ShortDesc = item.ShortDesc
-                        };
-                        items.Add(sOutput);
+                            MenuItemOutput sOutput = new MenuItemOutput()
+                            {
+                                Id = item.Id,
+                                Name = item.Name,
+                                ShortDesc = item.ShortDesc
+                            };
+                            items.Add(sOutput);
+                        }
+                        output.MenuItems = items;
+                        output.Status = "OK";
+                    } else
+                    {
+                        output.Status = "NO_PRIVILEGE";
                     }
-                    output.MenuItems = items;
-                    output.Status = "OK";
                 }
             } else
             {
@@ -59,15 +69,16 @@ namespace FYP.Controllers.Api
         [Route("Api/Menu/Create")]
         public CreateMenuOutput CreateMenu([FromBody] CreateMenuInput input)
         {
-            User user = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)) && e.Deleted == false && e.Status > 0).FirstOrDefault();
             Vendor vendor = _db.Vendors.Where(e => e.Id.Equals(input.VendorId) && e.Deleted == false).FirstOrDefault();
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
             CreateMenuOutput output = new CreateMenuOutput();
-            if (user == null || vendor == null)
+
+            if (vendor == null)
             {
                 output.Result = "DOES_NOT_EXIST";
             } else
             {
-                if (vendor.Owner == user || user.Status > 1)
+                if (vendor.Owner == aspUser.User || aspUser.IsStaff)
                 {
                     Menu newMenu = new Menu()
                     {
@@ -91,17 +102,17 @@ namespace FYP.Controllers.Api
         [Route("Api/Menu/RetrieveById")]
         public MenuInfoOutput RetrieveById([FromBody] MenuInfoInput input)
         {
-            User user = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)) && e.Deleted == false).FirstOrDefault();
             Menu menu = _db.Menus.Where(e => e.Id.Equals(input.MenuId) && e.Deleted == false).FirstOrDefault();
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
             MenuInfoOutput output = new MenuInfoOutput();
 
-            if (user == null || menu == null)
+            if (menu == null)
             {
                 output.Result = "DOES_NOT_EXIST";
             }
             else
             {
-                if (menu.Vendor.Owner == user || user.Status > 1)
+                if (menu.Vendor.Owner == aspUser.User || aspUser.IsStaff)
                 {
                     output.MenuName = menu.Name;
                     output.Result = "OK";
@@ -119,16 +130,16 @@ namespace FYP.Controllers.Api
         [Route("Api/Menu/Delete")]
         public MenuInfoOutput DeleteMenu([FromBody] MenuInfoInput input)
         {
-            User user = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)) && e.Deleted == false).FirstOrDefault();
             Menu menu = _db.Menus.Where(e => e.Id.Equals(input.MenuId) && e.Deleted == false).FirstOrDefault();
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
             MenuInfoOutput output = new MenuInfoOutput();
 
-            if (user == null || menu == null)
+            if (menu == null)
             {
                 output.Result = "DOES_NOT_EXIST";
             } else
             {
-                if (menu.Vendor.Owner == user || user.Status > 1)
+                if (menu.Vendor.Owner == aspUser.User || aspUser.IsStaff)
                 {
                     menu.Deleted = true;
                     _db.SaveChanges();

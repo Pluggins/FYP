@@ -154,15 +154,5 @@ namespace FYP.Controllers.Api
 
             return output;
         }
-
-        [HttpPost]
-        [Route("Api/Test")]
-        public async Task<LoginUserOutput> test()
-        {
-            var status = await _userManager.AddToRoleAsync(_db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault(), "Staff");
-            LoginUserOutput output = new LoginUserOutput();
-            output.Result = "DONE";
-            return output;
-        }
     }
 }
