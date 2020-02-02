@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FYP.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -26,18 +27,12 @@ namespace FYP.Controllers
 
         public IActionResult Index()
         {
-            if (!User.Identity.IsAuthenticated)
+            if (User.IsInRole("Staff"))
             {
-                return RedirectToAction("Index","Login");
+                return RedirectToAction("Index", "Vendor");
             } else
             {
-                if (User.IsInRole("Staff"))
-                {
-                    return RedirectToAction("Index", "Vendor");
-                } else
-                {
-                    return RedirectToAction("Index", "Menu");
-                }
+                return RedirectToAction("Index", "Menu");
             }
         }
 

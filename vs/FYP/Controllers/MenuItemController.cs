@@ -7,10 +7,12 @@ using FYP.Data;
 using FYP.Models;
 using FYP.Models.ViewModels;
 using FYP.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FYP.Controllers
 {
+    [Authorize]
     public class MenuItemController : Controller
     {
         private readonly ApplicationDbContext _db;

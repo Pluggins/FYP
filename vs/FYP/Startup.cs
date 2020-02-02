@@ -50,6 +50,7 @@ namespace FYP
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
+            services.ConfigureApplicationCookie(option => option.LoginPath = "/Login");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
