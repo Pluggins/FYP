@@ -47,7 +47,7 @@ namespace FYP.Controllers.Api
                     User selectedUser = session.User;
                     output.OrderId = newOrder.Id;
                     output.Status = "OK";
-                    output.User = selectedUser;
+                    output.UserId = selectedUser.Id;
                     newOrder.User = session.User;
                     _db.Orders.Add(newOrder);
                     _db.SaveChanges();

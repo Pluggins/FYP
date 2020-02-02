@@ -73,7 +73,7 @@ namespace FYP.Controllers.Api
             MenuItemInfoOutput output = new MenuItemInfoOutput();
             if (!string.IsNullOrEmpty(input.MenuItemId))
             {
-                MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(input)).FirstOrDefault();
+                MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(input.MenuItemId)).FirstOrDefault();
                 AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
                 
                 if (menuItem == null)
@@ -107,7 +107,7 @@ namespace FYP.Controllers.Api
             MenuItemInfoOutput output = new MenuItemInfoOutput();
             if (!string.IsNullOrEmpty(input.MenuItemId))
             {
-                MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(input)).FirstOrDefault();
+                MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(input.MenuItemId)).FirstOrDefault();
                 AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 if (menuItem == null)

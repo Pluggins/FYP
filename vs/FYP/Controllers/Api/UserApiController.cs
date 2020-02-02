@@ -164,6 +164,7 @@ namespace FYP.Controllers.Api
             _db._Users.Add(newUser);
             AppLoginSession loginSession = new AppLoginSession(Guid.NewGuid().ToString());
             loginSession.User = newUser;
+            loginSession.Status = 1;
             _db.AppLoginSessions.Add(loginSession);
             _db.SaveChanges();
 

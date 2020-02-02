@@ -22,7 +22,7 @@ namespace FYP.Models.ViewModels
     {
         public string OrderId { get; set; }
         public string Status { get; set; }
-        public User User { get; set; }
+        public string UserId { get; set; }
     }
 
     public class CreateOrderItem
