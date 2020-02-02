@@ -5,8 +5,15 @@ using System.Threading.Tasks;
 
 namespace FYP.Models.ViewModels
 {
+    public class VendorInfo
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
+
     public class VendorInfoOutput
     {
+        public List<VendorInfo> VendorList { get; set; }
         public Vendor Vendor { get; set; }
         public string Result { get; set; }
     }

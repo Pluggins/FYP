@@ -141,5 +141,30 @@ namespace FYP.Controllers.Api
 
             return output;
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Api/Vendor/RetrieveList")]
+        public VendorInfoOutput RetrieveList()
+        {
+            VendorInfoOutput output = new VendorInfoOutput();
+            List<Vendor> vendorList = _db.Vendors.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
+            List<VendorInfo> newVendorList = new List<VendorInfo>();
+
+            foreach (Vendor item in vendorList)
+            {
+                VendorInfo vendor = new VendorInfo()
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                };
+
+                newVendorList.Add(vendor);
+            }
+
+            output.VendorList = newVendorList;
+            output.Result = "OK";
+            return output;
+        }
     }
 }

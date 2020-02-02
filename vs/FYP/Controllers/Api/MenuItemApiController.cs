@@ -7,10 +7,12 @@ using FYP.Data;
 using FYP.Models;
 using FYP.Models.ViewModels;
 using FYP.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FYP.Controllers.Api
 {
+    [Authorize]
     public class MenuItemApiController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -130,6 +132,52 @@ namespace FYP.Controllers.Api
                 output.Result = "INPUT_IS_NULL";
             }
 
+            return output;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Api/MenuItem/RetrieveListByMenuId")]
+        public MenuItemInfoOutput RetrieveListByMenuId([FromBody] MenuItemInfoInput input)
+        {
+            MenuItemInfoOutput output = new MenuItemInfoOutput();
+            if (input == null)
+            {
+                output.Result = "INPUT_IS_NULL";
+            } else
+            {
+                if (string.IsNullOrEmpty(input.MenuId))
+                {
+                    output.Result = "INPUT_IS_NULL";
+                } else
+                {
+                    Menu menu = _db.Menus.Where(e => e.Id.Equals(input.MenuId) && e.Deleted == false).FirstOrDefault();
+                    if (menu == null)
+                    {
+                        output.Result = "DOES_NOT_EXIST";
+                    } else
+                    {
+                        List<MenuItem> menuItemList = menu.MenuItems.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
+                        List<MenuItemInfo> newMenuItemList = new List<MenuItemInfo>();
+
+                        foreach (MenuItem item in menuItemList)
+                        {
+                            MenuItemInfo menuItem = new MenuItemInfo()
+                            {
+                                Id = item.Id,
+                                Name = item.Name,
+                                ShortDesc = item.ShortDesc,
+                                LongDesc = item.LongDesc,
+                                Price = item.Price.ToString()
+                            };
+                            newMenuItemList.Add(menuItem);
+                        }
+
+                        output.MenuItemList = newMenuItemList;
+                        output.Result = "OK";
+                    }
+                }
+            }
             return output;
         }
     }

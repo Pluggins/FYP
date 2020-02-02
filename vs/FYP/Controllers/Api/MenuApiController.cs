@@ -153,5 +153,52 @@ namespace FYP.Controllers.Api
 
             return output;
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Api/Menu/RetrieveListByVendorId")]
+        public MenuInfoOutput RetrieveListByVendorId([FromBody] MenuInfoInput input)
+        {
+            MenuInfoOutput output = new MenuInfoOutput();
+            if (input == null)
+            {
+                output.Result = "INPUT_IS_NULL";
+            } else
+            {
+                if (string.IsNullOrEmpty(input.VendorId))
+                {
+                    output.Result = "INPUT_IS_NULL";
+                }
+                else
+                {
+                    Vendor vendor = _db.Vendors.Where(e => e.Id.Equals(input.VendorId) && e.Deleted == false).FirstOrDefault();
+                    if (vendor == null)
+                    {
+                        output.Result = "DOES_NOT_EXIST";
+                    }
+                    else
+                    {
+                        List<Menu> menuList = vendor.Menus.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
+                        List<MenuInfo> newMenuList = new List<MenuInfo>();
+
+                        foreach (Menu item in menuList)
+                        {
+                            MenuInfo menu = new MenuInfo()
+                            {
+                                Id = item.Id,
+                                Name = item.Name,
+                                ShortDesc = item.ShortDesc
+                            };
+
+                            newMenuList.Add(menu);
+                        }
+
+                        output.MenuList = newMenuList;
+                        output.Result = "OK";
+                    }
+                }
+            }
+            return output;
+        }
     }
 }

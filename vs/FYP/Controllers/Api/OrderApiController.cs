@@ -6,11 +6,13 @@ using FYP.Data;
 using FYP.Models;
 using FYP.Models.ViewModels;
 using FYP.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FYP.Controllers.Api
 {
+    [Authorize]
     public class OrderApiController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -20,6 +22,7 @@ namespace FYP.Controllers.Api
             _db = db;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Api/Order/Create")]
         public CreateOrderOutput Create([FromBody] CreateOrderInput input)
@@ -87,6 +90,7 @@ namespace FYP.Controllers.Api
             return output;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Api/Order/SelfList")]
         public List<RetrieveOrderListOutput> RetrieveOrderList_Self([FromBody] RetrieveOrderListInput input)
