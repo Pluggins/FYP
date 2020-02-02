@@ -154,5 +154,24 @@ namespace FYP.Controllers.Api
 
             return output;
         }
+
+        [HttpPost]
+        [Route("Api/User/CreateTempUserSession")]
+        public CreateUserOutput CreateTempUser()
+        {
+            CreateUserOutput output = new CreateUserOutput();
+            User newUser = new User();
+            _db._Users.Add(newUser);
+            AppLoginSession loginSession = new AppLoginSession(Guid.NewGuid().ToString());
+            loginSession.User = newUser;
+            _db.AppLoginSessions.Add(loginSession);
+            _db.SaveChanges();
+
+            output.UserId = newUser.Id;
+            output.SessionId = loginSession.Id;
+            output.SessionKey = loginSession.Key;
+
+            return output;
+        }
     }
 }

@@ -13,12 +13,10 @@ namespace FYP.Models
     {
         [Key]
         public string Id { get; set; }
-        [Required]
         public string Email { get; set; }
         public string FName { get; set; }
         public string LName { get; set; }
         public int Status { get; set; }
-        [Required]
         public virtual IdentityUser AspNetUser { get; set; }
         public virtual ICollection<Vendor> ListVendors { get; set; }
         public virtual ICollection<Order> ListOrders { get; set; }

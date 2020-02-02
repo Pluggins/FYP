@@ -18,5 +18,8 @@ namespace FYP.Models.ViewModels
     public class CreateUserOutput
     {
         public string Status { get; set; }
+        public string UserId { get; set; }
+        public string SessionId { get; set; }
+        public string SessionKey { get; set; }
     }
 }

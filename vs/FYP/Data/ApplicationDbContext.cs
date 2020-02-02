@@ -25,5 +25,13 @@ namespace FYP.Data
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<User>()
+                .HasIndex(e => e.Email)
+                .IsUnique(true);
+        }
     }
 }
