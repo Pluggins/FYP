@@ -65,7 +65,7 @@
                         <div class="col-3">
                             <div class="item-card">
                                 <div>
-                                    <div class="btn btn-danger btn-circle btn-circle-sm btn-icon"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                                    <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item1.Id" onclick="removeItem('@item1.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
                                 </div>
                                 <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
                                 </div>
@@ -82,7 +82,7 @@
                             <div class="col-3">
                                 <div class="item-card">
                                     <div>
-                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item2.Id" onclick="removeItem('@item2.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
                                     </div>
                                     <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
                                     </div>
@@ -100,7 +100,7 @@
                             <div class="col-3">
                                 <div class="item-card">
                                     <div>
-                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item3.Id" onclick="removeItem('@item3.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
                                     </div>
                                     <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
                                     </div>
@@ -118,7 +118,7 @@
                             <div class="col-3">
                                 <div class="item-card">
                                     <div>
-                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item4.Id" onclick="removeItem('@item4.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
                                     </div>
                                     <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
                                     </div>
@@ -184,69 +184,30 @@
     </div>
 </div>
 
-<script>
-    var menuId = '@Model.Menu.Id';
-    var creatingMenuItem = false;
+<div class="modal fade" id="deleteMenuItemModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                Are you sure you want to delete the following item?
+                <div style="margin:0 auto; width:50%; padding:10px;">
+                    <div style="text-align:center; border:1px solid black; padding:10px; background-color:#e8e8e8;">
+                        Item name: <span id="itemNameConfirmation"></span>
+                    </div>
+                </div>
 
-    function createNewItemModal() {
-        reinitializeCreateNewItem();
-        $('#addItemModal').modal('show');
-    }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="deleteConfirmButton" onclick="initiateRemoveItem()">Delete Now</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    function reinitializeCreateNewItem() {
-        $('#Name').val('');
-        $('#Price').val('');
-        $('#Desc').val('');
-        $('#errorFrame').attr('style', 'display:none;');
-    }
-
-    function initiateCreateNewItem() {
-        if (!creatingMenuItem) {
-            creatingMenuItem = true;
-            if ($('#Name').val().length < 1 || $('#Price').val().length < 1 || $('#Desc').val().length < 1) {
-                $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                $('#errorMsg').html('<div style="text-align: center;">Please enter the item name, unit price and description.</div>');
-                creatingMenuItem = false;
-            } else {
-                $('#createItemButton').attr('class', 'btn btn-primary disabled');
-                $('#createItemButton').html('<i class="fas fa-spinner fa-spin"></i>');
-                $.ajax({
-                    url: '/Api/MenuItem/Create',
-                    type: 'POST',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    async: false,
-                    data: JSON.stringify({ 'MenuId': menuId, 'ItemName': $('#Name').val() , 'Price': $('#Price').val(), 'Desc': $('#Desc').val()}),
-                    success: function (responds) {
-                        if (responds.result == "OK") {
-                            $('#createItemButton').attr('class', 'btn btn-success disabled');
-                            $('#createItemButton').html('Created');
-                            setTimeout(function () { window.location.replace("/MenuItem/" + menuId); }, 2000);
-                        } else if (responds.result == "DOES_NOT_EXIST") {
-                            $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                            $('#errorMsg').html('<div style="text-align: center;">Internal error: Please try again later.</div>');
-                            $('#createItemButton').attr('class', 'btn btn-primary');
-                            $('#createItemButton').html('Add');
-                            creatingMenuItem = false;
-                        } else if (responds.result == "PARSING_ERROR") {
-                            $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                            $('#errorMsg').html('<div style="text-align: center;">Input error: Price must be in numbers.</div>');
-                            $('#createItemButton').attr('class', 'btn btn-primary');
-                            $('#createItemButton').html('Add');
-                            creatingMenuItem = false;
-                        } else if (responds.result == "NO_PRIVILEGE") {
-                            $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-                            $('#errorMsg').html('<div style="text-align: center;">Internal error: Please try again later.</div>');
-                            $('#createItemButton').attr('class', 'btn btn-primary');
-                            $('#createItemButton').html('Add');
-                            creatingMenuItem = false;
-                        }
-                        deletingMenu = false;
-                    },
-                    error: function () {
-                    }
-                });
-            }
-        }
-    }
-</script>
+<script src="~/js/menuitem.js"></script>
