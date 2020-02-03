@@ -1,5 +1,4 @@
-﻿var menuId = '@Model.Menu.Id';
-var creatingMenuItem = false;
+﻿var creatingMenuItem = false;
 var removingItem = false;
 var initiatingRemoveItem = false;
 var selectedItemId;

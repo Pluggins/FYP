@@ -31,6 +31,7 @@ namespace FYP.Controllers.Api
             Order newOrder = new Order();
             bool orderCreated = false;
 
+            // Advised not to be used
             if (input.Type == 1)
             {
                 output.OrderId = newOrder.Id;
