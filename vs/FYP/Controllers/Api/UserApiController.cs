@@ -100,7 +100,7 @@ namespace FYP.Controllers.Api
                 {
                     if (_userManager.PasswordHasher.VerifyHashedPassword(aspUser, aspUser.PasswordHash, input.Password) == PasswordVerificationResult.Success)
                     {
-                        AppLoginSession newSession = new AppLoginSession(Guid.NewGuid().ToString());
+                        AppLoginSession newSession = new AppLoginSession(Guid.NewGuid().ToString(), Request);
                         newSession.User = _db._Users.Where(e => e.AspNetUser.Equals(aspUser)).FirstOrDefault();
                         newSession.Status = 1;
                         _db.AppLoginSessions.Add(newSession);
@@ -171,7 +171,7 @@ namespace FYP.Controllers.Api
             CreateUserOutput output = new CreateUserOutput();
             User newUser = new User();
             _db._Users.Add(newUser);
-            AppLoginSession loginSession = new AppLoginSession(Guid.NewGuid().ToString());
+            AppLoginSession loginSession = new AppLoginSession(Guid.NewGuid().ToString(), Request);
             loginSession.User = newUser;
             loginSession.Status = 1;
             _db.AppLoginSessions.Add(loginSession);

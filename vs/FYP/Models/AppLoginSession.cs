@@ -1,5 +1,6 @@
 ﻿using FYP.Data;
 using FYP.Services;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,8 @@ namespace FYP.Models
         public virtual User User { get; set; }
         public int Status { get; set; }
         public DateTime DateCreated { get; set; }
+        public string IpAddress { get; set; }
+        public string UserAgent { get; set; }
 
         public AppLoginSession(string key)
         {
@@ -25,6 +28,16 @@ namespace FYP.Models
             Status = 0;
             DateCreated = DateTime.UtcNow.AddHours(8);
             Key = HashingService.GenerateSHA256(Convert.FromBase64String(key.Replace("-", "")), Convert.FromBase64String(ApplicationDbContext._hashSalt));
+        }
+
+        public AppLoginSession(string key, HttpRequest request)
+        {
+            Id = Guid.NewGuid().ToString();
+            Status = 0;
+            DateCreated = DateTime.UtcNow.AddHours(8);
+            Key = HashingService.GenerateSHA256(Convert.FromBase64String(key.Replace("-", "")), Convert.FromBase64String(ApplicationDbContext._hashSalt));
+            IpAddress = request.Host.Value;
+            UserAgent = request.Headers["User-Agent"].ToString();
         }
     }
 }
