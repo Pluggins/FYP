@@ -67,7 +67,7 @@ function checkUser() {
     if (!vendorChecking) {
         if ($('#Email').val().length < 1 || $('#Name').val().length < 1) {
             $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
-            $('#errorMsg').html('<div style="text-align: center;">Please fill in new vendor email and password.</div>');
+            $('#errorMsg').html('<div style="text-align: center;">Please fill in new vendor name and email.</div>');
         } else {
             vendorChecking = true;
             $('#searchBtn').html('<i class="fas fa-spinner fa-spin"></i>');
