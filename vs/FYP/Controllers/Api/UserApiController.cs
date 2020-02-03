@@ -46,28 +46,37 @@ namespace FYP.Controllers.Api
                 output.Status = "PASSWORD_NOT_MATCH";
             } else
             {
-                IdentityUser newAspUser = new IdentityUser()
+                User user = _db._Users.Where(e => e.Email.ToUpper().Equals(input.Email.ToUpper())).FirstOrDefault();
+                
+                if (user != null)
                 {
-                    UserName = input.Email,
-                    Email = input.Email
-                };
-                var status = await _userManager.CreateAsync(newAspUser, input.Password);
-                if (status.Succeeded)
-                {
-                    User newUser = new User()
-                    {
-                        FName = input.FName,
-                        LName = input.LName,
-                        Email = input.Email,
-                        AspNetUser = newAspUser,
-                        Status = 1
-                    };
-                    _db._Users.Add(newUser);
-                    _db.SaveChanges();
-                    output.Status = "OK";
+                    output.Status = "EMAIL_IN_USE";
                 } else
                 {
-                    output.Status = "INTERNAL_ERROR";
+                    IdentityUser newAspUser = new IdentityUser()
+                    {
+                        UserName = input.Email,
+                        Email = input.Email
+                    };
+                    var status = await _userManager.CreateAsync(newAspUser, input.Password);
+                    if (status.Succeeded)
+                    {
+                        User newUser = new User()
+                        {
+                            FName = input.FName,
+                            LName = input.LName,
+                            Email = input.Email,
+                            AspNetUser = newAspUser,
+                            Status = 1
+                        };
+                        _db._Users.Add(newUser);
+                        _db.SaveChanges();
+                        output.Status = "OK";
+                    }
+                    else
+                    {
+                        output.Status = "INTERNAL_ERROR";
+                    }
                 }
             }
             return output;
