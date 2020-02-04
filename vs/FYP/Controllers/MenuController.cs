@@ -24,7 +24,7 @@ namespace FYP.Controllers
 
         public IActionResult Index()
         {
-            List<Vendor> vendorList = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.DateCreated).ToList();
+            List<Vendor> vendorList = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
             if (vendorList.Count == 0)
             {
                 ViewBag.Nav = 2;

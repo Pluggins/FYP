@@ -30,32 +30,44 @@ namespace FYP.Controllers.Api
             CreateOrderOutput output = new CreateOrderOutput();
             Order newOrder = new Order();
             bool orderCreated = false;
+            Vendor selectedVendor = _db.Vendors.Where(e => e.Id.Equals(input.VendorId)).FirstOrDefault();
 
-            // Advised not to be used
-            if (input.Type == 1)
+            if (selectedVendor == null)
             {
-                output.OrderId = newOrder.Id;
-                output.Status = "OK";
-                _db.Orders.Add(newOrder);
-                _db.SaveChanges();
-                orderCreated = true;
+                output.Status = "INCORRECT_VENDOR_ID";
+            } else
+            {
+                output.VendorId = selectedVendor.Id;
+                newOrder.Vendor = selectedVendor;
 
-            } else if (input.Type == 2)
-            {
-                SessionService session = new SessionService(_db, input.SessionId, input.SessionKey);
-                if (session.IsValid)
+                // Advised not to be used
+                if (input.Type == 1)
                 {
-                    User selectedUser = session.User;
                     output.OrderId = newOrder.Id;
                     output.Status = "OK";
-                    output.UserId = selectedUser.Id;
-                    newOrder.User = session.User;
                     _db.Orders.Add(newOrder);
                     _db.SaveChanges();
                     orderCreated = true;
-                } else
+
+                }
+                else if (input.Type == 2)
                 {
-                    output.Status = "SESSION_NOT_FOUND_OR_EXPIRED";
+                    SessionService session = new SessionService(_db, input.SessionId, input.SessionKey);
+                    if (session.IsValid)
+                    {
+                        User selectedUser = session.User;
+                        output.OrderId = newOrder.Id;
+                        output.Status = "OK";
+                        output.UserId = selectedUser.Id;
+                        newOrder.User = session.User;
+                        _db.Orders.Add(newOrder);
+                        _db.SaveChanges();
+                        orderCreated = true;
+                    }
+                    else
+                    {
+                        output.Status = "SESSION_NOT_FOUND_OR_EXPIRED";
+                    }
                 }
             }
 
@@ -108,7 +120,8 @@ namespace FYP.Controllers.Api
                         OrderId = item.Id,
                         Date = item.DateCreated,
                         Status = item.Status,
-                        Amount = item.Amount
+                        Amount = item.Amount,
+                        VendorName = item.Vendor.Name
                     };
                     output.Add(sOutput);
                 }

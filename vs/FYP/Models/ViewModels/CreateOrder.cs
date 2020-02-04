@@ -10,6 +10,7 @@ namespace FYP.Models.ViewModels
         public int Type { get; set; }
         public string SessionId { get; set; }
         public string SessionKey { get; set; }
+        public string VendorId { get; set; }
         public List<CreateOrderItem> Items { get; set; }
 
         public CreateOrderInput()
@@ -23,6 +24,7 @@ namespace FYP.Models.ViewModels
         public string OrderId { get; set; }
         public string Status { get; set; }
         public string UserId { get; set; }
+        public string VendorId { get; set; }
     }
 
     public class CreateOrderItem

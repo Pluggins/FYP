@@ -17,5 +17,6 @@ namespace FYP.Models.ViewModels
         public DateTime Date { get; set; }
         public int Status { get; set; }
         public decimal Amount { get; set; }
+        public string VendorName { get; set; }
     }
 }

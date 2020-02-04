@@ -17,6 +17,7 @@ namespace FYP.Models
         [Required]
         public virtual User Owner { get; set; }
         public virtual ICollection<Menu> Menus { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
 
         public Vendor()
         {
