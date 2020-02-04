@@ -16,7 +16,7 @@ function login() {
                     $('#errorFrame').attr('style', 'display:none;')
                     $('#loginButton').html('Logged In');
                     $('#loginButton').attr('class', 'btn btn-success disabled');
-                    setTimeout(function () { window.location.replace("/"); }, 2000);
+                    checkUser();
                 } else if (responds.result == "FIELD_INCOMPLETE") {
                     $('#loginButton').html('Login Now');
                     $('#errorFrame').removeAttr('style');
@@ -43,4 +43,17 @@ function login() {
         });
         return false;
     }
+}
+
+function checkUser() {
+    $.ajax({
+        url: '/Api/User/CheckStaffRole',
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function () {
+            setTimeout(function () { window.location.replace("/"); }, 2000);
+        }
+    });
 }

@@ -14,6 +14,8 @@ namespace FYP.Models
         public string Id { get; set; }
         public int Status { get; set; }
         public virtual User User { get; set; }
+        [Required]
+        public virtual Vendor Vendor { get; set; }
         public decimal Amount { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
 

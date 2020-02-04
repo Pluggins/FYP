@@ -147,9 +147,15 @@ namespace FYP.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("VendorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("VendorId");
 
                     b.ToTable("Orders");
                 });
@@ -580,6 +586,12 @@ namespace FYP.Migrations
                     b.HasOne("FYP.Models.User", "User")
                         .WithMany("ListOrders")
                         .HasForeignKey("UserId");
+
+                    b.HasOne("FYP.Models.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FYP.Models.OrderItem", b =>

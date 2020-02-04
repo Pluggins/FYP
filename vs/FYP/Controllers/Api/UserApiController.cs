@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FYP.Data;
 using FYP.Models;
 using FYP.Models.ViewModels;
+using FYP.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -139,6 +140,22 @@ namespace FYP.Controllers.Api
                     if (_userManager.PasswordHasher.VerifyHashedPassword(aspUser, aspUser.PasswordHash, input.Password) == PasswordVerificationResult.Success)
                     {
                         await _signInManager.SignInAsync(aspUser, true);
+                        AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                        if (userService.IsStaff)
+                        {
+                            if (!User.IsInRole("Staff"))
+                            {
+                                IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
+                                await _userManager.AddToRoleAsync(identityUser, "Staff");
+                            }
+                        } else
+                        {
+                            if (User.IsInRole("Staff"))
+                            {
+                                IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
+                                await _userManager.RemoveFromRoleAsync(identityUser, "Staff");
+                            }
+                        }
                         output.Result = "OK";
                     }
                     else
@@ -149,6 +166,35 @@ namespace FYP.Controllers.Api
                 }
             }
             return output;
+        }
+
+        [HttpPost]
+        [Route("Api/User/CheckStaffRole")]
+        public async Task<bool> CheckStaffRole()
+        {
+            AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (userService.IsStaff)
+            {
+                if (!User.IsInRole("Staff"))
+                {
+                    IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
+                    await _userManager.AddToRoleAsync(identityUser, "Staff");
+                    await _signInManager.SignOutAsync();
+                    await _signInManager.SignInAsync(identityUser, true);
+                }
+            }
+            else
+            {
+                if (User.IsInRole("Staff"))
+                {
+                    IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
+                    await _userManager.RemoveFromRoleAsync(identityUser, "Staff");
+                    await _signInManager.SignOutAsync();
+                    await _signInManager.SignInAsync(identityUser, true);
+                }
+            }
+
+            return true;
         }
 
         [HttpPost]
