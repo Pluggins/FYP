@@ -21,6 +21,7 @@ namespace FYP.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<AppLoginSession> AppLoginSessions { get; set; }
+        public DbSet<MemberCapture> MemberCaptures { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
