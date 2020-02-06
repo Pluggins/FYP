@@ -28,8 +28,11 @@
                         {
                             <li class="nav-item @(ViewBag.Nav == 1 ? "active" : null)"><a href="/Vendor" class="nav-link">Vendors</a></li>
                         }
-                        <li class="nav-item @(ViewBag.Nav == 2 ? "active" : null)"><a href="/Menu" class="nav-link">Menus</a></li>
-                        <li class="nav-item @(ViewBag.Nav == 3 ? "active" : null)"><a href="/Order" class="nav-link">Orders</a></li>
+                        if (User.IsInRole("Vendor"))
+                        {
+                            <li class="nav-item @(ViewBag.Nav == 2 ? "active" : null)"><a href="/Menu" class="nav-link">Menus</a></li>
+                            <li class="nav-item @(ViewBag.Nav == 3 ? "active" : null)"><a href="/Order" class="nav-link">Orders</a></li>
+                        }
                     }
 
                     @if (User.Identity.IsAuthenticated)

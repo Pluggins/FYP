@@ -12,6 +12,7 @@ namespace FYP.Services
         private readonly ApplicationDbContext _db;
         public bool IsValid { get; set; }
         public bool IsStaff { get; set; }
+        public bool IsVendor { get; set; }
         public User User { get; set; }
 
         public AspUserService(ApplicationDbContext db, string aspUserId)
@@ -29,6 +30,11 @@ namespace FYP.Services
                 }
 
                 if (User.Status > 1)
+                {
+                    IsVendor = true;
+                }
+
+                if (User.Status > 2)
                 {
                     IsStaff = true;
                 }

@@ -2,8 +2,46 @@
 @{
     Layout = "~/Views/Shared/_GuestLayout.cshtml";
 }
+<div style="padding-top:20vh;">
+    <div style="border:1px solid #848181; width:80%; margin:0 auto; border-radius:5px; background-color:#fffaf5; box-shadow:0px 0px 10px #aeaeae; padding:20px 20px;">
+        @if (ViewBag.Status == 1)
+        {
+            <div style="text-align:center;">
+                <img src="~/lib/icons/scan.png" width="50%" /><br />
+                <div style="margin-top:20px;">Please scan the QR again to capture your membership to your phone.</div>
+            </div>
+        }
 
-@if (ViewBag.Status == 1)
-{
+        @if (ViewBag.Status == 2)
+        {
+            <div style="text-align:center;">
+                <img src="~/lib/icons/scan.png" width="50%" /><br />
+                <div style="margin-top:20px;">QR has expired, please scan again to capture your membership to your phone.</div>
+            </div>
+        }
 
-}
+        @if (ViewBag.Status == 3)
+        {
+    <div style="text-align:center;">
+        <img src="~/lib/icons/scan.png" width="50%" /><br />
+        <div style="margin-top:20px;">QR has expired, please scan again to capture your membership to your phone.</div>
+    </div>
+        }
+
+        @if (ViewBag.Status == 4)
+        {
+    <div style="text-align:center;">
+        <i class="fas fa-check-circle" style="font-size:100px; color:#10743c;"></i>
+        <div style="margin-top:20px;">Your membership has been successfully captured!</div>
+        @if (!User.Identity.IsAuthenticated)
+        {
+    <div style="border:1px solid #d28d8d; background-color:#ffc6c6; margin-top:20px;">
+        <div style="margin-top:0px;"><a href="/Login">Login now</a> to enjoy special member privileges!</div>
+        <div style="margin-top:0px;">New user? <a href="/Register">Register now</a>!</div>
+    </div>
+            
+        }
+    </div>
+        }
+    </div>
+</div>

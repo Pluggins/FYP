@@ -22,12 +22,9 @@ namespace FYP.Models
         public string IpAddress { get; set; }
         public string UserAgent { get; set; }
 
-        public AppLoginSession(string key)
+        public AppLoginSession()
         {
-            Id = Guid.NewGuid().ToString();
-            Status = 0;
-            DateCreated = DateTime.UtcNow.AddHours(8);
-            Key = HashingService.GenerateSHA256(Convert.FromBase64String(key.Replace("-", "")), Convert.FromBase64String(ApplicationDbContext._hashSalt));
+
         }
 
         public AppLoginSession(string key, HttpRequest request)

@@ -16,6 +16,34 @@
     <script src="~/lib/fontawesome/js/all.min.js"></script>
     <script src="~/js/site.js"></script>
     <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Staff"))
+                        {
+                            <li class="nav-item @(ViewBag.Nav == 1 ? "active" : null)"><a href="/Vendor" class="nav-link">Vendors</a></li>
+                        }
+                        <li class="nav-item @(ViewBag.Nav == 2 ? "active" : null)"><a href="/Menu" class="nav-link">Menus</a></li>
+                        <li class="nav-item @(ViewBag.Nav == 3 ? "active" : null)"><a href="/Order" class="nav-link">Orders</a></li>
+                    }
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item d-block d-lg-none"><a href="#" class="nav-link" id="logoutButton1" onclick="logout();"><span id="logoutLabel1">Logout</span></a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item d-block d-lg-none"><a href="/login" class="nav-link">Login</a></li>
+                    }
+
+                </ul>
+            </div>
+        </nav>
         <div style="background-color:#ffb26e1f; min-height:90vh;">
             @RenderBody()
         </div>

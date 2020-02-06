@@ -5,7 +5,7 @@ function login() {
         $('#loginButton').html('<i class="fas fa-spinner fa-spin"></i>');
         $('#loginButton').attr('class', 'btn btn-primary disabled');
         $.ajax({
-            url: '/Api/User/AdminLogin',
+            url: '/Api/User/WebLogin',
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             dataType: "json",

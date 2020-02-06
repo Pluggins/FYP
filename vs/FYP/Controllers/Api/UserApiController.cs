@@ -120,8 +120,8 @@ namespace FYP.Controllers.Api
         }
 
         [HttpPost]
-        [Route("Api/User/AdminLogin")]
-        public async Task<LoginUserOutput> AdminLogin([FromBody] LoginUserInput input)
+        [Route("Api/User/WebLogin")]
+        public async Task<LoginUserOutput> WebLogin([FromBody] LoginUserInput input)
         {
             LoginUserOutput output = new LoginUserOutput();
             if (string.IsNullOrEmpty(input.Email) || string.IsNullOrEmpty(input.Password))
@@ -173,22 +173,61 @@ namespace FYP.Controllers.Api
         public async Task<bool> CheckStaffRole()
         {
             AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
+
             if (userService.IsStaff)
             {
+                bool change = false;
                 if (!User.IsInRole("Staff"))
-                {
-                    IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
+                { 
                     await _userManager.AddToRoleAsync(identityUser, "Staff");
+                }
+
+                if (!User.IsInRole("Vendor"))
+                {
+                    await _userManager.AddToRoleAsync(identityUser, "Vendor");
+                    change = true;
+                }
+                if (change)
+                {
                     await _signInManager.SignOutAsync();
                     await _signInManager.SignInAsync(identityUser, true);
                 }
-            }
-            else
+            } else if (userService.IsVendor)
             {
+                bool change = false;
                 if (User.IsInRole("Staff"))
                 {
-                    IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
                     await _userManager.RemoveFromRoleAsync(identityUser, "Staff");
+                    change = true;
+                }
+                if (!User.IsInRole("Vendor"))
+                {
+                    await _userManager.AddToRoleAsync(identityUser, "Vendor");
+                    change = true;
+                }
+                if (change)
+                {
+                    await _signInManager.SignOutAsync();
+                    await _signInManager.SignInAsync(identityUser, true);
+                }
+            } else
+            {
+                bool change = false;
+                if (User.IsInRole("Staff"))
+                {
+                    await _userManager.RemoveFromRoleAsync(identityUser, "Staff");
+                    change = true;
+                }
+
+                if (User.IsInRole("Vendor"))
+                {
+                    await _userManager.RemoveFromRoleAsync(identityUser, "Vendor");
+                    change = true;
+                }
+
+                if (change)
+                {
                     await _signInManager.SignOutAsync();
                     await _signInManager.SignInAsync(identityUser, true);
                 }

@@ -2,54 +2,109 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<div style="padding:80px 0px; padding-bottom:70px;">
-    <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6">
-            <form action="/" onsubmit="return register();">
-                <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 80px; padding-bottom:30px;">
-                    <div style="text-align: center; font-size: 36px;">Registration</div>
-                    <div style="text-align:center; margin-bottom:20px;">Already registered? <a href="/Login">Click here</a> to login.</div>
-                    <div style="font-size: 17px;margin-bottom: 5px;">
-                        <label for="Email">Email:</label>
-                        <input class="form-control" id="Email" type="email" />
-                    </div>
-                    <div style="font-size: 17px;margin-bottom: 5px;">
-                        <label for="FName">First Name:</label>
-                        <input class="form-control" id="FName" type="text" />
-                    </div>
-                    <div style="font-size: 17px;margin-bottom: 5px;">
-                        <label for="LName">Last Name:</label>
-                        <input class="form-control" id="LName" type="text" />
-                    </div>
-                    <div style="font-size:17px; margin-bottom:5px;">
-                        <label for="Password">Password:</label>
-                        <input class="form-control" id="Password" type="password" />
-                    </div>
-                    <div style="font-size:17px; margin-bottom:20px;">
-                        <label for="CPassword">Confirm Password:</label>
-                        <input class="form-control" id="CPassword" type="password" />
-                    </div>
-                    <div style="text-align:center;">
-                        <div class="row">
-                            <div class="col-1"></div>
-                            <div class="col-10">
-                                <div id="errorFrame" style="display:none;">
-                                    <div id="errorMsg" style="text-align:center !important; padding:1px; margin-bottom:10px; border:1px solid black; background-color:#ff8383;">
-                                        Error: Wrong Password
+@if (ViewBag.IsMobile)
+{
+    <div class="d-block d-lg-none" style="padding:80px 0px; padding-bottom:10vh;">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <form action="/" onsubmit="return register();">
+                    <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 45px; padding-bottom:30px;">
+                        <div style="text-align: center; font-size: 36px;">Registration</div>
+                        <div style="text-align:center; margin-bottom:20px;">Already registered? <a href="/Login">Click here</a> to login.</div>
+                        <div style="font-size: 17px;margin-bottom: 5px;">
+                            <label for="Email">Email:</label>
+                            <input class="form-control" id="Email" type="email" />
+                        </div>
+                        <div style="font-size: 17px;margin-bottom: 5px;">
+                            <label for="FName">First Name:</label>
+                            <input class="form-control" id="FName" type="text" />
+                        </div>
+                        <div style="font-size: 17px;margin-bottom: 5px;">
+                            <label for="LName">Last Name:</label>
+                            <input class="form-control" id="LName" type="text" />
+                        </div>
+                        <div style="font-size:17px; margin-bottom:5px;">
+                            <label for="Password">Password:</label>
+                            <input class="form-control" id="Password" type="password" />
+                        </div>
+                        <div style="font-size:17px; margin-bottom:20px;">
+                            <label for="CPassword">Confirm Password:</label>
+                            <input class="form-control" id="CPassword" type="password" />
+                        </div>
+                        <div style="text-align:center;">
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-10">
+                                    <div id="errorFrame" style="display:none;">
+                                        <div id="errorMsg" style="text-align:center !important; padding:1px; margin-bottom:10px; border:1px solid black; background-color:#ff8383;">
+                                            Error: Wrong Password
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="col-1"></div>
                             </div>
-                            <div class="col-1"></div>
+                            <button type="submit" class="btn btn-primary" id="registerButton">Register Now</button>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="registerButton">Register Now</button>
                     </div>
-                </div>
-            </form>
+                </form>
 
+            </div>
+            <div class="col-1"></div>
         </div>
-        <div class="col-3"></div>
     </div>
-</div>
+}
+else
+{
+    <div class="d-none d-lg-block" style="padding:80px 0px; padding-bottom:70px;">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <form action="/" onsubmit="return register();">
+                    <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 80px; padding-bottom:30px;">
+                        <div style="text-align: center; font-size: 36px;">Registration</div>
+                        <div style="text-align:center; margin-bottom:20px;">Already registered? <a href="/Login">Click here</a> to login.</div>
+                        <div style="font-size: 17px;margin-bottom: 5px;">
+                            <label for="Email">Email:</label>
+                            <input class="form-control" id="Email" type="email" />
+                        </div>
+                        <div style="font-size: 17px;margin-bottom: 5px;">
+                            <label for="FName">First Name:</label>
+                            <input class="form-control" id="FName" type="text" />
+                        </div>
+                        <div style="font-size: 17px;margin-bottom: 5px;">
+                            <label for="LName">Last Name:</label>
+                            <input class="form-control" id="LName" type="text" />
+                        </div>
+                        <div style="font-size:17px; margin-bottom:5px;">
+                            <label for="Password">Password:</label>
+                            <input class="form-control" id="Password" type="password" />
+                        </div>
+                        <div style="font-size:17px; margin-bottom:20px;">
+                            <label for="CPassword">Confirm Password:</label>
+                            <input class="form-control" id="CPassword" type="password" />
+                        </div>
+                        <div style="text-align:center;">
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-10">
+                                    <div id="errorFrame" style="display:none;">
+                                        <div id="errorMsg" style="text-align:center !important; padding:1px; margin-bottom:10px; border:1px solid black; background-color:#ff8383;">
+                                            Error: Wrong Password
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="registerButton">Register Now</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+}
+
 <script src="~/js/register.js"></script>
