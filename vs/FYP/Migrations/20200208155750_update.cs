@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FYP.Migrations
 {
-    public partial class init : Migration
+    public partial class update : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,6 +40,24 @@ namespace FYP.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MemberCaptures",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    DeletedBy = table.Column<string>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false),
+                    Code = table.Column<string>(nullable: true),
+                    AppLoginSessionId = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MemberCaptures", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -238,7 +256,7 @@ namespace FYP.Migrations
                     Deleted = table.Column<bool>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
-                    VendorId = table.Column<string>(nullable: true),
+                    VendorId = table.Column<string>(nullable: false),
                     Amount = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
@@ -255,7 +273,7 @@ namespace FYP.Migrations
                         column: x => x.VendorId,
                         principalTable: "Vendors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -349,9 +367,10 @@ namespace FYP.Migrations
                     DateCreated = table.Column<DateTime>(nullable: false),
                     Deleted = table.Column<bool>(nullable: false),
                     PaymentId = table.Column<string>(nullable: true),
-                    MenuItemId = table.Column<string>(nullable: true),
+                    OrderItemId = table.Column<string>(nullable: true),
                     Quantity = table.Column<int>(nullable: false),
-                    Status = table.Column<int>(nullable: false)
+                    Status = table.Column<int>(nullable: false),
+                    MenuItemId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -360,6 +379,12 @@ namespace FYP.Migrations
                         name: "FK_PaymentItems_MenuItems_MenuItemId",
                         column: x => x.MenuItemId,
                         principalTable: "MenuItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PaymentItems_OrderItems_OrderItemId",
+                        column: x => x.OrderItemId,
+                        principalTable: "OrderItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -420,6 +445,11 @@ namespace FYP.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MemberCaptures_AppLoginSessionId",
+                table: "MemberCaptures",
+                column: "AppLoginSessionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MenuItems_MenuId",
                 table: "MenuItems",
                 column: "MenuId");
@@ -455,6 +485,11 @@ namespace FYP.Migrations
                 column: "MenuItemId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PaymentItems_OrderItemId",
+                table: "PaymentItems",
+                column: "OrderItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PaymentItems_PaymentId",
                 table: "PaymentItems",
                 column: "PaymentId");
@@ -480,6 +515,14 @@ namespace FYP.Migrations
                 name: "IX_Vendors_OwnerId",
                 table: "Vendors",
                 column: "OwnerId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_MemberCaptures_AppLoginSessions_AppLoginSessionId",
+                table: "MemberCaptures",
+                column: "AppLoginSessionId",
+                principalTable: "AppLoginSessions",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserRoles_AspNetUsers_UserId",
@@ -529,9 +572,6 @@ namespace FYP.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AppLoginSessions");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -547,7 +587,7 @@ namespace FYP.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "OrderItems");
+                name: "MemberCaptures");
 
             migrationBuilder.DropTable(
                 name: "PaymentItems");
@@ -556,16 +596,22 @@ namespace FYP.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "MenuItems");
+                name: "AppLoginSessions");
+
+            migrationBuilder.DropTable(
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "Menus");
+                name: "MenuItems");
 
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Menus");
 
             migrationBuilder.DropTable(
                 name: "Vendors");

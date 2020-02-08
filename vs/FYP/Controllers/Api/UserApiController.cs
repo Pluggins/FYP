@@ -140,22 +140,6 @@ namespace FYP.Controllers.Api
                     if (_userManager.PasswordHasher.VerifyHashedPassword(aspUser, aspUser.PasswordHash, input.Password) == PasswordVerificationResult.Success)
                     {
                         await _signInManager.SignInAsync(aspUser, true);
-                        AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
-                        if (userService.IsStaff)
-                        {
-                            if (!User.IsInRole("Staff"))
-                            {
-                                IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
-                                await _userManager.AddToRoleAsync(identityUser, "Staff");
-                            }
-                        } else
-                        {
-                            if (User.IsInRole("Staff"))
-                            {
-                                IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
-                                await _userManager.RemoveFromRoleAsync(identityUser, "Staff");
-                            }
-                        }
                         output.Result = "OK";
                     }
                     else
@@ -233,6 +217,44 @@ namespace FYP.Controllers.Api
                 }
             }
 
+            return true;
+        }
+
+        [HttpPost]
+        [Route("Api/User/RetrieveTempStore")]
+        public bool RetrieveTempStore()
+        {
+            var id = Request.Cookies["CaptureId"];
+            var code = Request.Cookies["CaptureCode"];
+            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (id != null && code != null && aspUser.IsValid)
+            {
+                MemberCapture capture = _db.MemberCaptures.Where(e => e.Id.Equals(id.ToString()) && e.Status == 2).FirstOrDefault();
+                if (capture != null)
+                {
+                    if (capture.Code.Equals(code.ToString()))
+                    {
+                        List<Order> orders = capture.AppLoginSession.User.ListOrders.ToList();
+                        foreach (Order item in orders)
+                        {
+                            item.User = aspUser.User;
+                        }
+                        Response.Cookies.Append("CaptureId", capture.Id,
+                            new Microsoft.AspNetCore.Http.CookieOptions()
+                            {
+                                Expires = DateTime.UtcNow
+                            }); ;
+                        Response.Cookies.Append("CaptureCode", capture.Code,
+                            new Microsoft.AspNetCore.Http.CookieOptions()
+                            {
+                                Expires = DateTime.UtcNow
+                            });
+                        capture.Status = 0;
+                        _db.SaveChanges();
+                    }
+                }
+            }
             return true;
         }
 

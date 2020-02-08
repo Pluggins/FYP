@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FYP.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200204074740_update2")]
-    partial class update2
+    [Migration("20200208162302_update1")]
+    partial class update1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,6 +49,39 @@ namespace FYP.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AppLoginSessions");
+                });
+
+            modelBuilder.Entity("FYP.Models.MemberCapture", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AppLoginSessionId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppLoginSessionId");
+
+                    b.ToTable("MemberCaptures");
                 });
 
             modelBuilder.Entity("FYP.Models.Menu", b =>
@@ -250,7 +283,7 @@ namespace FYP.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MenuItemId")
+                    b.Property<string>("OrderItemId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PaymentId")
@@ -264,7 +297,7 @@ namespace FYP.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MenuItemId");
+                    b.HasIndex("OrderItemId");
 
                     b.HasIndex("PaymentId");
 
@@ -569,6 +602,13 @@ namespace FYP.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("FYP.Models.MemberCapture", b =>
+                {
+                    b.HasOne("FYP.Models.AppLoginSession", "AppLoginSession")
+                        .WithMany()
+                        .HasForeignKey("AppLoginSessionId");
+                });
+
             modelBuilder.Entity("FYP.Models.Menu", b =>
                 {
                     b.HasOne("FYP.Models.Vendor", "Vendor")
@@ -616,9 +656,9 @@ namespace FYP.Migrations
 
             modelBuilder.Entity("FYP.Models.PaymentItem", b =>
                 {
-                    b.HasOne("FYP.Models.MenuItem", "MenuItem")
+                    b.HasOne("FYP.Models.OrderItem", "OrderItem")
                         .WithMany("PaymentItems")
-                        .HasForeignKey("MenuItemId");
+                        .HasForeignKey("OrderItemId");
 
                     b.HasOne("FYP.Models.Payment", "Payment")
                         .WithMany("PaymentItems")

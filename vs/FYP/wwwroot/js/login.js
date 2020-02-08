@@ -53,6 +53,19 @@ function checkUser() {
         dataType: "json",
         async: false,
         success: function () {
+            retrieveStore();
+        }
+    });
+}
+
+function retrieveStore() {
+    $.ajax({
+        url: '/Api/User/RetrieveTempStore',
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function () {
             setTimeout(function () { window.location.replace("/"); }, 2000);
         }
     });

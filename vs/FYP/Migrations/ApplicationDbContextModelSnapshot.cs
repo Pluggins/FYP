@@ -281,7 +281,7 @@ namespace FYP.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MenuItemId")
+                    b.Property<string>("OrderItemId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PaymentId")
@@ -295,7 +295,7 @@ namespace FYP.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MenuItemId");
+                    b.HasIndex("OrderItemId");
 
                     b.HasIndex("PaymentId");
 
@@ -654,9 +654,9 @@ namespace FYP.Migrations
 
             modelBuilder.Entity("FYP.Models.PaymentItem", b =>
                 {
-                    b.HasOne("FYP.Models.MenuItem", "MenuItem")
+                    b.HasOne("FYP.Models.OrderItem", "OrderItem")
                         .WithMany("PaymentItems")
-                        .HasForeignKey("MenuItemId");
+                        .HasForeignKey("OrderItemId");
 
                     b.HasOne("FYP.Models.Payment", "Payment")
                         .WithMany("PaymentItems")

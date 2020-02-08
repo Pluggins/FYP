@@ -14,6 +14,7 @@ namespace FYP.Models
         public string Id { get; set; }
         public virtual Order Order { get; set; }
         public virtual MenuItem MenuItem { get; set; }
+        public virtual ICollection<PaymentItem> PaymentItems { get; set; }
         public double Quantity { get; set; }
 
         public OrderItem()
