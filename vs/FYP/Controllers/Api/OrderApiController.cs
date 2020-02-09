@@ -87,6 +87,7 @@ namespace FYP.Controllers.Api
                                 {
                                     Order = newOrder,
                                     MenuItem = orderItem,
+                                    UnitPrice = orderItem.Price,
                                     Quantity = item.Quantity
                                 });
                             }

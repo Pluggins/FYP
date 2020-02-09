@@ -49,7 +49,7 @@ namespace FYP.Controllers
                 MenuListViewModel model = new MenuListViewModel();
                 model.SelectedVendor = vendor;
                 model.Vendors = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.DateCreated).ToList();
-                model.Menus =  vendor.Menus.Where(e => e.Deleted == false).OrderByDescending(e => e.DateCreated).ToList();
+                model.Menus =  vendor.Menus.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
                 return View(model);
             }
         }

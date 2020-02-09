@@ -38,7 +38,7 @@ namespace FYP.Controllers
             {
                 if (userService.User == model.Menu.Vendor.Owner || userService.IsStaff)
                 {
-                    model.MenuItems = model.Menu.MenuItems.Where(e => e.Deleted == false).OrderBy(e => e.DateCreated).ToList();
+                    model.MenuItems = model.Menu.MenuItems.Where(e => e.Deleted == false).OrderByDescending(e => e.Name).ToList();
                     model.Vendor = model.Menu.Vendor;
                     return View(model);
                 } else
