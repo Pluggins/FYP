@@ -5,23 +5,29 @@ using System.Threading.Tasks;
 using FYP.Data;
 using FYP.Models;
 using FYP.Models.ViewModels;
+using FYP.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FYP.Controllers.Api
 {
     public class PaymentApiController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public PaymentApiController(
-            ApplicationDbContext db)
+            ApplicationDbContext db,
+            IWebHostEnvironment hostingEnvironment)
         {
             _db = db;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpPost]
         [Route("Api/Payment/PayRestByOrderId")]
-        public PaymentInfoOutput PayRestByOrderId(PaymentInfoInput input)
+        public async Task<PaymentInfoOutput> PayRestByOrderId([FromBody] PaymentInfoInput input)
         {
             PaymentInfoOutput output = new PaymentInfoOutput();
             if (input == null)
@@ -73,11 +79,14 @@ namespace FYP.Controllers.Api
 
                             if (sum > 0)
                             {
+                                PaymentServiceOutput paymentService = await PaymentService.InitPaypalAsync(sum);
                                 Payment newPayment = new Payment()
                                 {
                                     Amount = sum,
                                     Status = 1,
-                                    Order = order
+                                    Order = order,
+                                    Method = "PAYPAL",
+                                    MethodId = paymentService.PaymentId
                                 };
 
                                 foreach (OrderItem item in currentOrderItems)
@@ -98,6 +107,8 @@ namespace FYP.Controllers.Api
                                 output.Amount = sum;
                                 output.Result = "OK";
                                 output.PaymentId = newPayment.Id;
+                                output.PaymentLink = paymentService.PaymentLink;
+                                output.PaymentLinkQR = QRCodeService.GenerateQRCode(_hostingEnvironment, output.PaymentLink);
                             }
                             else
                             {
@@ -112,6 +123,22 @@ namespace FYP.Controllers.Api
                 }
             }
             return output;
+        }
+        
+        [HttpPost]
+        [Route("Api/Test")]
+        public async Task<PaymentServiceOutput> DoTestAsync()
+        {
+            PaymentServiceOutput output = await PaymentService.InitPaypalAsync(5);
+            QRCodeService.GenerateQRCode(_hostingEnvironment, output.PaymentLink);
+            return output;
+        }
+
+        [HttpPost]
+        [Route("Api/Test2")]
+        public string DoTest2()
+        {
+            return _hostingEnvironment.ContentRootPath;
         }
     }
 }

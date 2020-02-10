@@ -22,6 +22,8 @@ namespace FYP.Models
          * 2 - done
          */
         public int Status { get; set; }
+        public string Method { get; set; }
+        public string MethodId { get; set; }
         public virtual ICollection<PaymentItem> PaymentItems { get; set; }
 
         public Payment()

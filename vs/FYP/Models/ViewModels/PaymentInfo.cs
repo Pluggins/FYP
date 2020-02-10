@@ -13,6 +13,8 @@ namespace FYP.Models.ViewModels
     public class PaymentInfoOutput
     {
         public string PaymentId { get; set; }
+        public string PaymentLink { get; set; }
+        public string PaymentLinkQR { get; set; }
         public string Result { get; set; }
         public decimal Amount { get; set; }
     }
