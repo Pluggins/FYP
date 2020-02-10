@@ -14,5 +14,6 @@ namespace FYP.Models.ViewModels
     {
         public string PaymentId { get; set; }
         public string Result { get; set; }
+        public decimal Amount { get; set; }
     }
 }

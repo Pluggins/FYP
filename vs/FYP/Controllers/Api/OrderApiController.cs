@@ -38,6 +38,7 @@ namespace FYP.Controllers.Api
             } else
             {
                 output.VendorId = selectedVendor.Id;
+                newOrder.Status = 1;
                 newOrder.Vendor = selectedVendor;
 
                 // Advised not to be used

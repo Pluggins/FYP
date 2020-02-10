@@ -15,6 +15,12 @@ namespace FYP.Models
         public virtual Order Order { get; set; }
         public string NickName { get; set; }
         public decimal Amount { get; set; }
+        /*
+         * status
+         * 0 - closed
+         * 1 - active
+         * 2 - done
+         */
         public int Status { get; set; }
         public virtual ICollection<PaymentItem> PaymentItems { get; set; }
 

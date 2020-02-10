@@ -12,11 +12,18 @@ namespace FYP.Models
     {
         [Key]
         public string Id { get; set; }
+        /*
+         * status
+         * 0 - closed
+         * 1 - active
+         * 2 - paid
+         */
         public int Status { get; set; }
         public virtual User User { get; set; }
         [Required]
         public virtual Vendor Vendor { get; set; }
         public decimal Amount { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
 
         public Order()
