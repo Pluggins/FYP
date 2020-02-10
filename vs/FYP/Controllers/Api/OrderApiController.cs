@@ -75,6 +75,7 @@ namespace FYP.Controllers.Api
             if (orderCreated)
             {
                 Order selectedOrder = _db.Orders.Where(e => e.Id.Equals(newOrder.Id)).FirstOrDefault();
+                selectedOrder.OrderItems = new List<OrderItem>();
                 if (input.Items != null)
                 {
                     foreach (CreateOrderItem item in input.Items)
@@ -98,7 +99,6 @@ namespace FYP.Controllers.Api
                             }
                             _db.SaveChanges();
                         }
-                        newOrder.OrderItems.Where(e => e.MenuItem.Id.Equals(orderItem.Id)).Count();
                     }
                 }
             }

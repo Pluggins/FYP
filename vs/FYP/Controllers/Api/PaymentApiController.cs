@@ -7,6 +7,7 @@ using FYP.Models;
 using FYP.Models.ViewModels;
 using FYP.Services;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -89,6 +90,8 @@ namespace FYP.Controllers.Api
                                     MethodId = paymentService.PaymentId
                                 };
 
+                                newPayment.PaymentItems = new List<PaymentItem>();
+
                                 foreach (OrderItem item in currentOrderItems)
                                 {
                                     if (item.Quantity > 0)
@@ -108,10 +111,13 @@ namespace FYP.Controllers.Api
                                 output.Result = "OK";
                                 output.PaymentId = newPayment.Id;
                                 output.PaymentLink = paymentService.PaymentLink;
-                                output.PaymentLinkQR = QRCodeService.GenerateQRCode(_hostingEnvironment, output.PaymentLink);
+                                string[] urlFrag = Request.GetDisplayUrl().Split('/');
+                                output.PaymentLinkQR = urlFrag[0]+"//"+urlFrag[2] + "/qrcode/" + QRCodeService.GenerateQRCode(_hostingEnvironment, output.PaymentLink);
                             }
                             else
                             {
+                                order.Status = 2;
+                                _db.SaveChanges();
                                 output.Amount = sum;
                                 output.Result = "PAID";
                             }

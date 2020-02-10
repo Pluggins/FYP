@@ -33,7 +33,7 @@ namespace FYP.Services
                 }
             }
 
-            return null;
+            return fileName;
         }
     }
 }
