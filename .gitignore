@@ -436,4 +436,4 @@ lint/tmp/
 # lint/reports/
 
 #custom folder
-/qrcode
+qrcode/

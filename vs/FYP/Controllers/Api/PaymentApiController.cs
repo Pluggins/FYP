@@ -132,11 +132,11 @@ namespace FYP.Controllers.Api
         }
         
         [HttpPost]
-        [Route("Api/Test")]
-        public async Task<PaymentServiceOutput> DoTestAsync()
+        [Route("Api/Payment/CheckPaypalOrder")]
+        public async Task<PaymentStatusOutput> CheckPaypalOrder([FromBody] PaymentStatusInput input)
         {
-            PaymentServiceOutput output = await PaymentService.InitPaypalAsync(5);
-            QRCodeService.GenerateQRCode(_hostingEnvironment, output.PaymentLink);
+            PaymentStatusOutput output = await PaymentService.CheckPaypal(input.PaymentOrderId);
+
             return output;
         }
 
