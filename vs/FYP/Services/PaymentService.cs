@@ -56,11 +56,14 @@ namespace FYP.Services
             dynamic responseJson = JsonConvert.DeserializeObject(fullResponse);
 
             output.Id = responseJson.id;
-            output.PayerEmail = responseJson.payer.email_address;
-            output.PayerGivenName = responseJson.payer.name.given_name;
-            output.PayerSurname = responseJson.payer.name.surname;
-            output.PayerId = responseJson.payer.payer_id;
             output.Status = responseJson.status;
+            if (output.Status.Equals("APPROVED"))
+            {
+                output.PayerEmail = responseJson.payer.email_address;
+                output.PayerGivenName = responseJson.payer.name.given_name;
+                output.PayerSurname = responseJson.payer.name.surname;
+                output.PayerId = responseJson.payer.payer_id;
+            }
 
             return output;
         }

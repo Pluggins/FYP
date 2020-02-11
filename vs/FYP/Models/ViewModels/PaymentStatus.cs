@@ -7,7 +7,7 @@ namespace FYP.Models.ViewModels
 {
     public class PaymentStatusInput
     {
-        public string PaymentOrderId { get; set; }
+        public string PaymentId { get; set; }
     }
 
     public class PaymentStatusOutput

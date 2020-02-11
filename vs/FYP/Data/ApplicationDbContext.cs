@@ -18,6 +18,7 @@ namespace FYP.Data
         public DbSet<Menu> Menus { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<PaymentItem> PaymentItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<AppLoginSession> AppLoginSessions { get; set; }

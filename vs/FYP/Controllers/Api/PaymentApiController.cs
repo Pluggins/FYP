@@ -50,10 +50,23 @@ namespace FYP.Controllers.Api
                         if (order.Status == 1)
                         {
                             List<OrderItem> orderItems = order.OrderItems.Where(e => e.Deleted == false).ToList();
-                            List<OrderItem> currentOrderItems = orderItems;
+                            List<PaymentOrderItem> currentOrderItems = new List<PaymentOrderItem>();
                             List<Payment> payments = order.Payments.Where(e => e.Status == 2).ToList();
                             List<PaymentItem> paymentItems = new List<PaymentItem>();
                             decimal sum = 0;
+
+                            foreach (OrderItem item in orderItems)
+                            {
+                                PaymentOrderItem newItem = new PaymentOrderItem()
+                                {
+                                    Id = item.Id,
+                                    MenuItem = item.MenuItem,
+                                    Order = item.Order,
+                                    Quantity = item.Quantity,
+                                    UnitPrice = item.UnitPrice
+                                };
+                                currentOrderItems.Add(newItem);
+                            }
 
                             foreach (Payment item in payments)
                             {
@@ -66,14 +79,15 @@ namespace FYP.Controllers.Api
 
                             foreach (PaymentItem item in paymentItems)
                             {
-                                OrderItem orderItem = currentOrderItems.Where(e => e.Id.Equals(item.OrderItem.Id)).FirstOrDefault();
+                                PaymentOrderItem orderItem = currentOrderItems.Where(e => e.Id.Equals(item.OrderItem.Id)).FirstOrDefault();
                                 if (orderItem != null)
                                 {
                                     orderItem.Quantity -= item.Quantity;
                                 }
                             }
 
-                            foreach (OrderItem item in currentOrderItems)
+                            
+                            foreach (PaymentOrderItem item in currentOrderItems)
                             {
                                 sum += item.UnitPrice * (decimal)item.Quantity;
                             }
@@ -89,23 +103,24 @@ namespace FYP.Controllers.Api
                                     Method = "PAYPAL",
                                     MethodId = paymentService.PaymentId
                                 };
+                                _db.Payments.Add(newPayment);
 
                                 newPayment.PaymentItems = new List<PaymentItem>();
 
-                                foreach (OrderItem item in currentOrderItems)
+                                foreach (PaymentOrderItem item in currentOrderItems)
                                 {
                                     if (item.Quantity > 0)
                                     {
                                         PaymentItem pItem = new PaymentItem()
                                         {
-                                            OrderItem = item,
+                                            OrderItem = orderItems.Where(e => e.Id.Equals(item.Id)).FirstOrDefault(),
                                             Quantity = item.Quantity
                                         };
 
                                         newPayment.PaymentItems.Add(pItem);
+                                        _db.PaymentItems.Add(pItem);
                                     }
                                 }
-
                                 _db.SaveChanges();
                                 output.Amount = sum;
                                 output.Result = "OK";
@@ -135,8 +150,22 @@ namespace FYP.Controllers.Api
         [Route("Api/Payment/CheckPaypalOrder")]
         public async Task<PaymentStatusOutput> CheckPaypalOrder([FromBody] PaymentStatusInput input)
         {
-            PaymentStatusOutput output = await PaymentService.CheckPaypal(input.PaymentOrderId);
+            Payment payment = _db.Payments.Where(e => e.Deleted == false && e.Status.Equals(1) && e.Id.Equals(input.PaymentId)).FirstOrDefault();
+            PaymentStatusOutput output = new PaymentStatusOutput();
 
+            if (payment == null)
+            {
+                output.Status = "PAYMENT_DONE_OR_EXPIRED";
+            } else
+            {
+                output = await PaymentService.CheckPaypal(payment.MethodId);
+                if (output.Status == "APPROVED")
+                {
+                    payment.Status = 2;
+                    _db.SaveChanges();
+                }
+            }
+            
             return output;
         }
 
