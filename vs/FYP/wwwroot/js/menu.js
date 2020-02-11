@@ -37,7 +37,7 @@ function createMenu() {
                     if (responds.result == "OK") {
                         $('#createVendorButton').attr('class', 'btn btn-success disabled');
                         $('#createVendorButton').html('Created');
-                        setTimeout(function () { window.location.replace("/Menu/Edit/" + vendorId); }, 2000);
+                        setTimeout(function () { window.location.replace("/Menu/" + vendorId); }, 2000);
                     } else if (responds.result == "DOES_NOT_EXIST") {
                         creatingMenu = false;
                         $('#errorFrame').attr('style', 'background-color: #ffe6e5; border-radius: 5px; border: 1px solid #9f9292; padding:10px 20px; margin-top:20px;')
@@ -109,7 +109,7 @@ function initiateDeleteMenu(id) {
                     $('#deleteConfirmButton').html('Deleted');
                     $('#deleteConfirmButton').attr('class', 'btn btn-success disabled');
                     vendorDeletingId = id;
-                    setTimeout(function () { window.location.replace("/Menu/Edit/" + vendorId); }, 2000);
+                    setTimeout(function () { window.location.replace("/Menu/" + vendorId); }, 2000);
                 } else if (responds.result == "NOT_FOUND") {
                 }
             },
@@ -123,5 +123,5 @@ function initiateDeleteMenu(id) {
 }
 
 function redirectToVendor() {
-    window.location.href = "/Menu/Edit/" + $('#vendorSelect').val();
+    window.location.href = "/Menu/" + $('#vendorSelect').val();
 }

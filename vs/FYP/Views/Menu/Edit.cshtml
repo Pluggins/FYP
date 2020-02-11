@@ -10,7 +10,7 @@
     </div>
 </div>
 <div style="padding:30px 50px;">
-    <div class="bread-crumb"><span><a href="/Menu">Menus</a></span><span class="bread-separator">-></span><span class="bread-target"><a href="/Menu/Edit/@Model.SelectedVendor.Id">@Model.SelectedVendor.Name</a></span></div>
+    <div class="bread-crumb"><span><a href="/Menu">Menus</a></span><span class="bread-separator">-></span><span class="bread-target"><a href="/Menu/@Model.SelectedVendor.Id">@Model.SelectedVendor.Name</a></span></div>
     <div class="row" style="margin-bottom:10px; width:100%; height:60px;">
         <div class="col-4">
             @if (Model.Vendors.Count() > 1)

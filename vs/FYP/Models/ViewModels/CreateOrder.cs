@@ -12,6 +12,7 @@ namespace FYP.Models.ViewModels
         public string SessionKey { get; set; }
         public string VendorId { get; set; }
         public List<CreateOrderItem> Items { get; set; }
+        public string OrderId { get; set; }
 
         public CreateOrderInput()
         {
@@ -22,9 +23,9 @@ namespace FYP.Models.ViewModels
     public class CreateOrderOutput
     {
         public string OrderId { get; set; }
-        public string Status { get; set; }
         public string UserId { get; set; }
         public string VendorId { get; set; }
+        public string Status { get; set; }
     }
 
     public class CreateOrderItem

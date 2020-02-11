@@ -36,6 +36,7 @@ namespace FYP.Controllers
             }
         }
 
+        [Route("/Order/{id}")]
         public IActionResult Edit(string id)
         {
             ViewBag.Nav = 3;

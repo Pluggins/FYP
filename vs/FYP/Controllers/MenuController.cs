@@ -36,7 +36,7 @@ namespace FYP.Controllers
             
         }
 
-        [Route("Menu/Edit/{id}")]
+        [Route("Menu/{id}")]
         public IActionResult Edit(string id) 
         {
             Vendor vendor = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Id.Equals(id) && e.Deleted == false).FirstOrDefault();

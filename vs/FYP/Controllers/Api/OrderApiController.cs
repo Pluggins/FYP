@@ -31,6 +31,7 @@ namespace FYP.Controllers.Api
             Order newOrder = new Order();
             bool orderCreated = false;
             Vendor selectedVendor = _db.Vendors.Where(e => e.Id.Equals(input.VendorId)).FirstOrDefault();
+            decimal sum = 0;
 
             if (selectedVendor == null)
             {
@@ -85,6 +86,7 @@ namespace FYP.Controllers.Api
                         {
                             if (selectedOrder.OrderItems.Where(e => e.MenuItem == orderItem).Count() <= 0)
                             {
+                                sum += orderItem.Price * (decimal) item.Quantity;
                                 selectedOrder.OrderItems.Add(new OrderItem()
                                 {
                                     Order = newOrder,
@@ -100,8 +102,68 @@ namespace FYP.Controllers.Api
                             _db.SaveChanges();
                         }
                     }
+
+                    newOrder.Amount = sum;
+                    _db.SaveChanges();
                 }
             }
+            return output;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Api/Order/AddItemByOrderId")]
+        public CreateOrderOutput AddItemByOrderId([FromBody] CreateOrderInput input)
+        {
+            decimal sum = 0;
+            CreateOrderOutput output = new CreateOrderOutput();
+            if (input == null)
+            {
+                output.Status = "INPUT_IS_NULL";
+            } else
+            {
+                Order order = _db.Orders.Where(e => e.Id.Equals(input.OrderId) && e.Deleted == false && e.Status == 1).FirstOrDefault();
+                if (order == null || input.Items == null)
+                {
+                    output.Status = "INPUT_IS_NULL";
+                }
+                else
+                {
+                    foreach (CreateOrderItem item in input.Items)
+                    {
+                        OrderItem orderItem = order.OrderItems.Where(e => e.MenuItem.Id.Equals(item.ItemId) && e.Deleted == false).FirstOrDefault();
+                        MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(item.ItemId) && e.Deleted == false).FirstOrDefault();
+                        sum += (decimal) item.Quantity * menuItem.Price;
+                        if (orderItem == null)
+                        {
+                            OrderItem newItem = new OrderItem()
+                            {
+                                Order = order,
+                                MenuItem = menuItem,
+                                UnitPrice = menuItem.Price,
+                                Quantity = item.Quantity
+                            };
+
+                            if (order.OrderItems == null)
+                            {
+                                order.OrderItems = new List<OrderItem>();
+                            }
+
+                            order.OrderItems.Add(newItem);
+                        } else
+                        {
+                            orderItem.Quantity += item.Quantity;
+                        }
+
+                        output.Status = "OK";
+                        _db.SaveChanges();
+                    }
+
+                    order.Amount += sum;
+                    _db.SaveChanges();
+                }
+            }
+            
             return output;
         }
 

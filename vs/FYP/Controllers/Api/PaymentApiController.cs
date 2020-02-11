@@ -150,19 +150,26 @@ namespace FYP.Controllers.Api
         [Route("Api/Payment/CheckPaypalOrder")]
         public async Task<PaymentStatusOutput> CheckPaypalOrder([FromBody] PaymentStatusInput input)
         {
-            Payment payment = _db.Payments.Where(e => e.Deleted == false && e.Status.Equals(1) && e.Id.Equals(input.PaymentId)).FirstOrDefault();
             PaymentStatusOutput output = new PaymentStatusOutput();
-
-            if (payment == null)
+            if (input == null)
             {
-                output.Status = "PAYMENT_DONE_OR_EXPIRED";
+                output.Status = "INPUT_IS_NULL";
             } else
             {
-                output = await PaymentService.CheckPaypal(payment.MethodId);
-                if (output.Status == "APPROVED")
+                Payment payment = _db.Payments.Where(e => e.Deleted == false && e.Status.Equals(1) && e.Id.Equals(input.PaymentId)).FirstOrDefault();
+                
+                if (payment == null)
                 {
-                    payment.Status = 2;
-                    _db.SaveChanges();
+                    output.Status = "PAYMENT_DONE_OR_EXPIRED";
+                }
+                else
+                {
+                    output = await PaymentService.CheckPaypal(payment.MethodId);
+                    if (output.Status == "APPROVED")
+                    {
+                        payment.Status = 2;
+                        _db.SaveChanges();
+                    }
                 }
             }
             
