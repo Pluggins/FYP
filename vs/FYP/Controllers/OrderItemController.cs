@@ -25,6 +25,7 @@ namespace FYP.Controllers
         [Route("OrderItem/{id}")]
         public IActionResult Index(string id)
         {
+            ViewBag.Nav = 3;
             if (string.IsNullOrEmpty(id))
             {
                 return RedirectToAction("Index", "Order");

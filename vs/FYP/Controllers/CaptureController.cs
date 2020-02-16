@@ -44,6 +44,7 @@ namespace FYP.Controllers
                             {
                                 item.User = aspUser.User;
                             }
+                            capture.Status = 2;
                             _db.SaveChanges();
 
                             ViewBag.Status = 3;
