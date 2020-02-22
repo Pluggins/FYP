@@ -22,32 +22,47 @@
 
         @if (ViewBag.Status == 3)
         {
-    <div style="text-align:center;">
-        <i class="fas fa-check-circle" style="font-size:100px; color:#10743c;"></i>
-        <div style="margin-top:20px;">Your membership has been successfully updated!</div>
-        @if (!User.Identity.IsAuthenticated)
-        {
-            <div style="border:1px solid #d28d8d; background-color:#ffc6c6; margin-top:20px;">
-                <div style="margin-top:0px;"><a href="/Login">Login now</a> to enjoy special member privileges!</div>
-                <div style="margin-top:0px;">New user? <a href="/Register">Register now</a>!</div>
+            <div style="text-align:center;">
+                <i class="fas fa-check-circle" style="font-size:100px; color:#10743c;"></i>
+                <div style="margin-top:20px;">Your membership has been successfully updated!</div>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div style="border:1px solid #d28d8d; background-color:#ffc6c6; margin-top:20px;">
+                        <div style="margin-top:0px;"><a href="/Login">Login now</a> to enjoy special member privileges!</div>
+                        <div style="margin-top:0px;">New user? <a href="/Register">Register now</a>!</div>
+                    </div>
+                }
             </div>
-        }
-    </div>
         }
 
         @if (ViewBag.Status == 4)
         {
-    <div style="text-align:center;">
-        <i class="fas fa-check-circle" style="font-size:100px; color:#10743c;"></i>
-        <div style="margin-top:20px;">Your membership has been successfully captured!</div>
-        @if (!User.Identity.IsAuthenticated)
-        {
-    <div style="border:1px solid #d28d8d; background-color:#ffc6c6; margin-top:20px;">
-        <div style="margin-top:0px;"><a href="/Login">Login now</a> to enjoy special member privileges!</div>
-        <div style="margin-top:0px;">New user? <a href="/Register">Register now</a>!</div>
-    </div> 
+            <div style="text-align:center;">
+                <i class="fas fa-check-circle" style="font-size:100px; color:#10743c;"></i>
+                <div style="margin-top:20px;">Your membership has been successfully captured!</div>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div style="border:1px solid #d28d8d; background-color:#ffc6c6; margin-top:20px;">
+                        <div style="margin-top:0px;"><a href="/Login">Login now</a> to enjoy special member privileges!</div>
+                        <div style="margin-top:0px;">New user? <a href="/Register">Register now</a>!</div>
+                    </div>
+                }
+            </div>
         }
-    </div>
+
+        @if (ViewBag.Status == 5)
+        {
+            <div style="text-align:center;">
+                <i class="fas fa-check-circle" style="font-size:100px; color:#10743c;"></i>
+                <div style="margin-top:20px;">Your membership has been captured, you may now start ordering!</div>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div style="border:1px solid #d28d8d; background-color:#ffc6c6; margin-top:20px;">
+                        <div style="margin-top:0px;"><a href="/Login">Login now</a> to enjoy special member privileges!</div>
+                        <div style="margin-top:0px;">New user? <a href="/Register">Register now</a>!</div>
+                    </div>
+                }
+            </div>
         }
     </div>
 </div>

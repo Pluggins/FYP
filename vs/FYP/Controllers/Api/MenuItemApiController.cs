@@ -174,6 +174,8 @@ namespace FYP.Controllers.Api
                         }
 
                         output.MenuItemList = newMenuItemList;
+                        output.MenuName = menu.Name;
+                        output.MenuId = menu.Id;
                         output.Result = "OK";
                     }
                 }

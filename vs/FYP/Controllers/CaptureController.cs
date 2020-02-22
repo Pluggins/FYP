@@ -22,6 +22,14 @@ namespace FYP.Controllers
 
         public IActionResult Index(string CaptureId, string CaptureCode)
         {
+            /*
+             * ViewBag status
+             *  1 - Capture detail not found
+             *  2 - Capture not exist
+             *  3 - Detail updated to existing session
+             *  4 - New session added to client
+             *  5 - Detail captured to server
+             */
             if (string.IsNullOrEmpty(CaptureId) || string.IsNullOrEmpty(CaptureCode))
             {
                 ViewBag.Status = 1;
@@ -37,43 +45,130 @@ namespace FYP.Controllers
                     if (capture.Status == 1)
                     {
                         AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
-                        if (aspUser.IsValid)
+                        
+                        if (capture.Type == 1)
                         {
-                            List<Order> orders = capture.AppLoginSession.User.ListOrders.ToList();
-                            foreach (Order item in orders)
+                            if (aspUser.IsValid)
                             {
-                                item.User = aspUser.User;
-                            }
-                            capture.Status = 2;
-                            _db.SaveChanges();
+                                MemberCapture newCapture = _db.MemberCaptures.Where(e => e.Id.Equals(CaptureId) && e.Code.Equals(CaptureCode) && e.Deleted == false && e.Status == 1).FirstOrDefault();
 
-                            ViewBag.Status = 3;
-                        } else if (Request.Cookies["CaptureId"] != null)
-                        {
-                            MemberCapture existingCapture = _db.MemberCaptures.Where(e => e.Id.Equals(Request.Cookies["CaptureId"].ToString())).FirstOrDefault();
-                            if (existingCapture == null)
-                            {
-                                ViewBag.Status = 1;
+                                if (newCapture == null)
+                                {
+                                    ViewBag.Status = 2;
+                                } else
+                                {
+                                    AppLoginSession newSession = new AppLoginSession(Guid.NewGuid().ToString(), Request)
+                                    {
+                                        User = aspUser.User,
+                                        Status = 1
+                                    };
+
+                                    newCapture.AppLoginSession = newSession;
+                                    newCapture.Status = 2;
+                                    _db.AppLoginSessions.Add(newSession);
+                                    _db.SaveChanges();
+
+                                    ViewBag.Status = 5;
+                                }
+                                
                             } else
                             {
-                                if (existingCapture.Code.Equals(Request.Cookies["CaptureCode"].ToString()) && existingCapture.Status == 2)
+                                if (Request.Cookies["CaptureId"] != null && Request.Cookies["CaptureCode"] != null)
                                 {
-                                    List<Order> orders = capture.AppLoginSession.User.ListOrders.ToList();
-                                    foreach (Order item in orders)
-                                    {
-                                        item.User = existingCapture.AppLoginSession.User;
-                                    }
-                                    capture.Status = 2;
+                                    MemberCapture existingCapture = _db.MemberCaptures.Where(e => e.Id.Equals(Request.Cookies["CaptureId"].ToString()) && e.Code.Equals(Request.Cookies["CaptureCode"].ToString()) && e.Deleted == false && e.Status == 1).FirstOrDefault();
 
-                                    Response.Cookies.Append("CaptureId", existingCapture.Id,
-                                    new Microsoft.AspNetCore.Http.CookieOptions()
+                                    if (existingCapture == null)
                                     {
-                                        Expires = DateTime.UtcNow.AddYears(5),
-                                        HttpOnly = true,
-                                        Secure = true,
-                                        SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
-                                    }); ;
-                                    Response.Cookies.Append("CaptureCode", existingCapture.Code,
+                                        ViewBag.Status = 2;
+                                    }
+                                    else
+                                    {
+                                        MemberCapture newCapture = _db.MemberCaptures.Where(e => e.Id.Equals(CaptureId) && e.Code.Equals(CaptureCode) && e.Deleted == false && e.Status == 1).FirstOrDefault();
+                                        newCapture.AppLoginSession = existingCapture.AppLoginSession;
+                                        newCapture.Status = 2;
+
+                                        _db.SaveChanges();
+                                        ViewBag.Status = 5;
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.Status = 1;
+                                }
+                            }
+                        }
+                        else if (capture.Type == 2)
+                        {
+                            if (aspUser.IsValid)
+                            {
+                                List<Order> orders = capture.AppLoginSession.User.ListOrders.ToList();
+                                foreach (Order item in orders)
+                                {
+                                    item.User = aspUser.User;
+                                }
+                                capture.Status = 2;
+                                _db.SaveChanges();
+
+                                ViewBag.Status = 3;
+                            }
+                            else if (Request.Cookies["CaptureId"] != null)
+                            {
+                                MemberCapture existingCapture = _db.MemberCaptures.Where(e => e.Id.Equals(Request.Cookies["CaptureId"].ToString())).FirstOrDefault();
+                                if (existingCapture == null)
+                                {
+                                    ViewBag.Status = 1;
+                                }
+                                else
+                                {
+                                    if (existingCapture.Code.Equals(Request.Cookies["CaptureCode"].ToString()) && existingCapture.Status == 2)
+                                    {
+                                        List<Order> orders = capture.AppLoginSession.User.ListOrders.ToList();
+                                        foreach (Order item in orders)
+                                        {
+                                            item.User = existingCapture.AppLoginSession.User;
+                                        }
+                                        capture.Status = 2;
+
+                                        Response.Cookies.Append("CaptureId", existingCapture.Id,
+                                        new Microsoft.AspNetCore.Http.CookieOptions()
+                                        {
+                                            Expires = DateTime.UtcNow.AddYears(5),
+                                            HttpOnly = true,
+                                            Secure = true,
+                                            SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+                                        }); ;
+                                        Response.Cookies.Append("CaptureCode", existingCapture.Code,
+                                        new Microsoft.AspNetCore.Http.CookieOptions()
+                                        {
+                                            Expires = DateTime.UtcNow.AddYears(5),
+                                            HttpOnly = true,
+                                            Secure = true,
+                                            SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+                                        });
+
+                                        _db.SaveChanges();
+                                        ViewBag.Status = 3;
+                                    }
+                                    else
+                                    {
+                                        ViewBag.Status = 1;
+                                    }
+                                }
+                                ViewBag.Status = 3;
+                            }
+                            else
+                            {
+                                capture.Status = 2;
+                                _db.SaveChanges();
+                                Response.Cookies.Append("CaptureId", capture.Id,
+                                new Microsoft.AspNetCore.Http.CookieOptions()
+                                {
+                                    Expires = DateTime.UtcNow.AddYears(5),
+                                    HttpOnly = true,
+                                    Secure = true,
+                                    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+                                }); ;
+                                Response.Cookies.Append("CaptureCode", capture.Code,
                                     new Microsoft.AspNetCore.Http.CookieOptions()
                                     {
                                         Expires = DateTime.UtcNow.AddYears(5),
@@ -81,37 +176,8 @@ namespace FYP.Controllers
                                         Secure = true,
                                         SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
                                     });
-
-                                    _db.SaveChanges();
-                                    ViewBag.Status = 3;
-                                } else
-                                {
-                                    ViewBag.Status = 1;
-                                }
+                                ViewBag.Status = 4;
                             }
-                            ViewBag.Status = 3;
-                        }
-                        else
-                        {
-                            capture.Status = 2;
-                            _db.SaveChanges();
-                            Response.Cookies.Append("CaptureId", capture.Id,
-                            new Microsoft.AspNetCore.Http.CookieOptions()
-                            {
-                                Expires = DateTime.UtcNow.AddYears(5),
-                                HttpOnly = true,
-                                Secure = true,
-                                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
-                            }); ;
-                            Response.Cookies.Append("CaptureCode", capture.Code,
-                                new Microsoft.AspNetCore.Http.CookieOptions()
-                                {
-                                    Expires = DateTime.UtcNow.AddYears(5),
-                                    HttpOnly = true,
-                                    Secure = true,
-                                    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
-                                });
-                            ViewBag.Status = 4;
                         }
                     }
                     else

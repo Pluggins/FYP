@@ -12,6 +12,8 @@ namespace FYP.Models.ViewModels
 
     public class CaptureInfoOutput
     {
+        public string SessionId { get; set; }
+        public string SessionKey { get; set; }
         public string Status { get; set; }
     }
 }

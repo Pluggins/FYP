@@ -115,6 +115,11 @@ namespace FYP.Controllers.Api
                     output.Status = "ACTIVE";
                 } else if (capture.Status == 2)
                 {
+                    if (capture.AppLoginSession != null && capture.Type == 1)
+                    {
+                        output.SessionId = capture.AppLoginSession.Id;
+                        output.SessionKey = capture.AppLoginSession.Key;
+                    }
                     output.Status = "SCANNED";
                 } else
                 {

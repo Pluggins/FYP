@@ -24,6 +24,7 @@ namespace FYP.Models.ViewModels
     {
         public string Result { get; set; }
         public string MenuName { get; set; }
+        public string MenuId { get; set; }
         public List<MenuItemInfo> MenuItemList { get; set; }
     }
 }
