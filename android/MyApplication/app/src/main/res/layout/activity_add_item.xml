@@ -10,14 +10,13 @@
         android:id="@+id/itemQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="50dp"
         android:ems="2"
         android:inputType="number"
-        android:text="0"
+        android:text="1"
         android:textAlignment="center"
         android:textSize="50dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -25,7 +24,7 @@
         android:id="@+id/itemAddBtn"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginTop="85dp"
+        android:layout_marginTop="65dp"
         android:background="#00FFFFFF"
         android:maxWidth="20dp"
         android:scaleType="fitXY"
@@ -38,7 +37,7 @@
         android:id="@+id/itemMinusBtn"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginTop="85dp"
+        android:layout_marginTop="65dp"
         android:adjustViewBounds="true"
         android:background="#00FFFFFF"
         android:scaleType="fitXY"
@@ -56,10 +55,10 @@
         android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/itemTitle"
         android:layout_width="408dp"
         android:layout_height="96dp"
         android:background="@drawable/top_title"
@@ -85,7 +84,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/addItemBtn2"
+        android:id="@+id/addBackBtn"
         android:layout_width="113dp"
         android:layout_height="72dp"
         android:layout_marginBottom="44dp"

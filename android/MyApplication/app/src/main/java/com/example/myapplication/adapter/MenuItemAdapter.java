@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Menu;
 import com.example.myapplication.model.MenuItem;
+import com.example.myapplication.service.MenuItemService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,11 @@ public class MenuItemAdapter extends ArrayAdapter<MenuItem> {
         v.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                TextView txtName = (TextView) view.findViewById(R.id.menuItemName);
+                TextView txtId = (TextView) view.findViewById(R.id.menuItemId);
+                MenuItemService.setSelectedMenuItemName(txtName.getText().toString());
+                MenuItemService.setSelectedMenuItemId(txtId.getText().toString());
+
                 Intent intent = new Intent(mContext, com.example.myapplication.AddItem.class);
                 mContext.startActivity(intent);
             }

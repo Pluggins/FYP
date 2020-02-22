@@ -81,69 +81,76 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
     private class LoadMenuItem extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String[] params) {
-            // HTTPPOST to API
-            String response = null;
-            URL url = null;
-            try {
-                url = new URL("https://fyp.amazecraft.net/Api/MenuItem/RetrieveListByMenuId");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-Type", "application/json");
-                con.setRequestProperty("Accept", "application/json");
-                con.setDoInput(true);
-
-                JSONObject json = new JSONObject();
-                json.put("MenuId", params[0]);
-
-                OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                wr.write(json.toString());
-                wr.flush();
-
-                try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
-                    StringBuilder sb = new StringBuilder();
-                    String responseLine = null;
-                    while ((responseLine = br.readLine()) != null) {
-                        sb.append(responseLine.trim());
-                    }
-                    response = sb.toString();
+            String id = MenuItemService.getMenuId();
+            if (!id.equals(params[0])) {
+                // HTTPPOST to API
+                String response = null;
+                URL url = null;
+                try {
+                    url = new URL("https://fyp.amazecraft.net/Api/MenuItem/RetrieveListByMenuId");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NetworkOnMainThreadException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+                try {
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("Content-Type", "application/json");
+                    con.setRequestProperty("Accept", "application/json");
+                    con.setDoInput(true);
+
+                    JSONObject json = new JSONObject();
+                    json.put("MenuId", params[0]);
+
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    wr.write(json.toString());
+                    wr.flush();
+
+                    try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                        StringBuilder sb = new StringBuilder();
+                        String responseLine = null;
+                        while ((responseLine = br.readLine()) != null) {
+                            sb.append(responseLine.trim());
+                        }
+                        response = sb.toString();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NetworkOnMainThreadException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return response;
+            } else {
+                return null;
             }
-            return response;
         }
 
         @Override
         protected void onPostExecute(String message) {
-            try {
-                JSONObject obj = new JSONObject(message);
-                JSONArray jArray = obj.getJSONArray("menuItemList");
-                MenuItemService.clear();
-                for (int i = 0; i < jArray.length() ; i++) {
-                    JSONObject tmpObj = jArray.getJSONObject(i);
-                    MenuItem newMenuItem = new MenuItem();
-                    newMenuItem.setId(tmpObj.getString("id"));
-                    newMenuItem.setName(tmpObj.getString("name"));
-                    newMenuItem.setShortDesc(tmpObj.getString("shortDesc"));
-                    newMenuItem.setPrice(BigDecimal.valueOf(Double.parseDouble(tmpObj.getString("price"))));
-                    MenuItemService.addMenuItem(newMenuItem);
+            if (message != null) {
+                try {
+                    JSONObject obj = new JSONObject(message);
+                    JSONArray jArray = obj.getJSONArray("menuItemList");
+                    MenuItemService.clear();
+                    for (int i = 0; i < jArray.length(); i++) {
+                        JSONObject tmpObj = jArray.getJSONObject(i);
+                        MenuItem newMenuItem = new MenuItem();
+                        newMenuItem.setId(tmpObj.getString("id"));
+                        newMenuItem.setName(tmpObj.getString("name"));
+                        newMenuItem.setShortDesc(tmpObj.getString("shortDesc"));
+                        newMenuItem.setPrice(BigDecimal.valueOf(Double.parseDouble(tmpObj.getString("price"))));
+                        MenuItemService.addMenuItem(newMenuItem);
+                    }
+
+                    MenuItemService.setMenuName(obj.getString("menuName"));
+                    MenuItemService.setMenuId(obj.getString("menuId"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-                MenuItemService.setMenuName(obj.getString("menuName"));
-                MenuItemService.setMenuId(obj.getString("menuId"));
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-
 
             Intent intent = new Intent(mContext, com.example.myapplication.MenuItem.class);
             mContext.startActivity(intent);

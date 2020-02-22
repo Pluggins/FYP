@@ -97,62 +97,69 @@ public class MainInit extends AppCompatActivity {
     private class LoadMenu extends AsyncTask<String, Void, String>  {
         @Override
         protected String doInBackground(String[] params) {
-            // HTTPPOST to API
-            String response = null;
-            URL url = null;
-            try {
-                url = new URL("https://fyp.amazecraft.net/Api/Menu/RetrieveListByVendorId");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-Type", "application/json");
-                con.setRequestProperty("Accept", "application/json");
-                con.setDoInput(true);
-
-                JSONObject json = new JSONObject();
-                json.put("VendorId", "e916642b-d464-476f-920d-43462d0110b3");
-
-                OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                wr.write(json.toString());
-                wr.flush();
-
-                try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
-                    StringBuilder sb = new StringBuilder();
-                    String responseLine = null;
-                    while ((responseLine = br.readLine()) != null) {
-                        sb.append(responseLine.trim());
-                    }
-                    response = sb.toString();
+            if (!MenuService.isInit()) {
+                // HTTPPOST to API
+                String response = null;
+                URL url = null;
+                try {
+                    url = new URL("https://fyp.amazecraft.net/Api/Menu/RetrieveListByVendorId");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NetworkOnMainThreadException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+                try {
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("Content-Type", "application/json");
+                    con.setRequestProperty("Accept", "application/json");
+                    con.setDoInput(true);
+
+                    JSONObject json = new JSONObject();
+                    json.put("VendorId", "e916642b-d464-476f-920d-43462d0110b3");
+
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    wr.write(json.toString());
+                    wr.flush();
+
+                    try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                        StringBuilder sb = new StringBuilder();
+                        String responseLine = null;
+                        while ((responseLine = br.readLine()) != null) {
+                            sb.append(responseLine.trim());
+                        }
+                        response = sb.toString();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NetworkOnMainThreadException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return response;
+            } else {
+                return null;
             }
-            return response;
         }
 
         @Override
         protected void onPostExecute(String message) {
-            try {
-                JSONObject obj = new JSONObject(message);
-                JSONArray jArray = obj.getJSONArray("menuList");
-                for (int i = 0; i < jArray.length() ; i++) {
-                    JSONObject tmpObj = jArray.getJSONObject(i);
-                    Menu newMenu = new Menu();
-                    newMenu.setId(tmpObj.getString("id"));
-                    newMenu.setName(tmpObj.getString("name"));
-                    MenuService.addList(newMenu);
+            if (message != null) {
+                try {
+                    JSONObject obj = new JSONObject(message);
+                    JSONArray jArray = obj.getJSONArray("menuList");
+                    for (int i = 0; i < jArray.length() ; i++) {
+                        JSONObject tmpObj = jArray.getJSONObject(i);
+                        Menu newMenu = new Menu();
+                        newMenu.setId(tmpObj.getString("id"));
+                        newMenu.setName(tmpObj.getString("name"));
+                        MenuService.addList(newMenu);
+                    }
+                    obj.get("menuList");
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                obj.get("menuList");
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
 
             Intent intent = new Intent(MainInit.this, MainActivity.class);
