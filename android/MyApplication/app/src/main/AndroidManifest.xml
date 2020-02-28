@@ -11,11 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddItem"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity android:name=".MainActivityMember"
+            android:label="Member"></activity>
+        <activity android:name=".MemberLogin" />
+        <activity
+            android:name=".AddItem"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".MenuItem" />
-        <activity android:name=".Main2Activity" />
-        <activity android:name=".MainInit"
+        <activity
+            android:name=".MainInit"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

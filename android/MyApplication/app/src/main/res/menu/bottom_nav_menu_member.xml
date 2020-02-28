@@ -12,5 +12,10 @@
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="Cart" />
 
+    <item
+        android:id="@+id/navigation_member"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Member" />
+
 
 </menu>

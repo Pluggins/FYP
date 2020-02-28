@@ -28,7 +28,7 @@ namespace FYP.Models
         {
             Id = Guid.NewGuid().ToString();
             string key = Guid.NewGuid().ToString();
-            Code = HashingService.GenerateSHA256(Convert.FromBase64String(key.Replace("-", "")), Convert.FromBase64String(ApplicationDbContext._hashSalt));
+            Code = HashingService.GenerateSHA256(Convert.FromBase64String(key.Replace("-", "")), Convert.FromBase64String(ApplicationDbContext._hashSalt)).Replace('+','x');
             Type = 0;
             Status = 1;
         }

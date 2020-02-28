@@ -62,4 +62,16 @@ public class MenuItemService {
     public static void setSelectedMenuItemName(String selectedMenuItemName) {
         MenuItemService.selectedMenuItemName = selectedMenuItemName;
     }
+
+    public static MenuItem retrieveItemById(String id) {
+        MenuItem itemSelected = null;
+
+        for (MenuItem item : menuItems) {
+            if (item.getId().equals(id)) {
+                itemSelected = item;
+            }
+        }
+
+        return itemSelected;
+    }
 }
