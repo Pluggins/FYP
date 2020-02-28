@@ -10,13 +10,16 @@ import android.os.NetworkOnMainThreadException;
 import android.os.StrictMode;
 import android.se.omapi.Session;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.example.myapplication.model.Menu;
 import com.example.myapplication.service.MenuService;
 import com.example.myapplication.service.SessionService;
+import com.example.myapplication.service.VendorService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +38,7 @@ import java.util.List;
 
 public class MainInit extends AppCompatActivity {
     private int choice = 0;
+    private ProgressBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +50,12 @@ public class MainInit extends AppCompatActivity {
         setTitle("Welcome");
         final Button button = (Button) findViewById(R.id.button2);
         final Button button2 = (Button) findViewById(R.id.button3);
+        bar = (ProgressBar) findViewById(R.id.progressbar);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                bar.setVisibility(View.VISIBLE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 LoadSession load = new LoadSession();
                 choice = 1;
                 load.execute();
@@ -56,6 +64,9 @@ public class MainInit extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bar.setVisibility(View.VISIBLE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 LoadSession load = new LoadSession();
                 choice = 2;
                 load.execute();
@@ -98,12 +109,17 @@ public class MainInit extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String message) {
-            try {
-                JSONObject obj = new JSONObject(message);
-                SessionService.setTemporarySession(obj.getString("sessionId"), obj.getString("sessionKey"));
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (SessionService.isNewUser()) {
+                try {
+                    JSONObject obj = new JSONObject(message);
+                    SessionService.setTemporarySession(obj.getString("sessionId"), obj.getString("sessionKey"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                SessionService.setIsMember(false);
+                SessionService.setNewUser(false);
             }
+
             LoadMenu loadMenu = new LoadMenu();
             loadMenu.execute();
         }
@@ -130,7 +146,7 @@ public class MainInit extends AppCompatActivity {
                     con.setDoInput(true);
 
                     JSONObject json = new JSONObject();
-                    json.put("VendorId", "e916642b-d464-476f-920d-43462d0110b3");
+                    json.put("VendorId", VendorService.getVendorId());
 
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(json.toString());
@@ -177,6 +193,7 @@ public class MainInit extends AppCompatActivity {
                 }
             }
             if (choice == 1) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Intent intent = new Intent(MainInit.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -243,6 +260,7 @@ public class MainInit extends AppCompatActivity {
             }
             InputStream is = null;
             try {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 is = (InputStream) new URL(SessionService.getQrUrl()).getContent();
                 SessionService.setQRLoginDrawable(Drawable.createFromStream(is, "src name"));
                 Intent intent = new Intent(MainInit.this, MemberLogin.class);

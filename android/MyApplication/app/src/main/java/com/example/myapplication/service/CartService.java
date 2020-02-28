@@ -37,4 +37,8 @@ public class CartService {
     public static List<CartItem> retrieveCartItems() {
         return itemList;
     }
+
+    public static int getItemCount() {
+        return itemList.size();
+    }
 }

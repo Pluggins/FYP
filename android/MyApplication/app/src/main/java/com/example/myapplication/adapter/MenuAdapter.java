@@ -1,5 +1,6 @@
 package com.example.myapplication.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -9,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -41,6 +44,8 @@ import java.util.List;
 public class MenuAdapter extends ArrayAdapter<Menu> {
     private List<Menu> dataSet;
     Context mContext;
+    private ProgressBar pb;
+    View gView;
 
     public MenuAdapter(ArrayList<Menu> data, Context context) {
         super(context, R.layout.listrow_menu, data);
@@ -58,6 +63,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
             LayoutInflater vi;
             vi = LayoutInflater.from(mContext);
             v = vi.inflate(R.layout.listrow_menu, parent,false);
+            gView = vi.inflate(R.layout.listrow_menu, parent,false);
 
             TextView txtId = (TextView) v.findViewById(R.id.menuId);
             TextView txtName = (TextView) v.findViewById(R.id.menuName);
@@ -67,6 +73,10 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
         v.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                ((Activity) mContext).getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                pb = view.getRootView().findViewById(R.id.menu_progressbar);
+                pb.setVisibility(View.VISIBLE);
                 TextView txtId = view.findViewById(R.id.menuId);
                 LoadMenuItem loadMenuItem = new LoadMenuItem();
                 loadMenuItem.execute(txtId.getText().toString());
@@ -151,7 +161,8 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
                     e.printStackTrace();
                 }
             }
-
+            ((Activity) mContext).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            pb.setVisibility(View.GONE);
             Intent intent = new Intent(mContext, com.example.myapplication.MenuItem.class);
             mContext.startActivity(intent);
         }

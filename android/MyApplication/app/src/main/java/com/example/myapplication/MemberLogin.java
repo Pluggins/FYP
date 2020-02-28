@@ -146,6 +146,7 @@ public class MemberLogin extends AppCompatActivity {
                     JSONObject obj = new JSONObject(message);
                     String status = obj.getString("status");
                     if (status.equals("SCANNED")) {
+                        SessionService.setIsMember(true);
                         SessionService.setTemporarySession(obj.getString("sessionId"),obj.getString("sessionKey"));
                         transactionStatus = 2;
                         onBackPressed();

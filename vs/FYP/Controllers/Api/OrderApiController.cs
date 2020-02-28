@@ -123,42 +123,47 @@ namespace FYP.Controllers.Api
             } else
             {
                 Order order = _db.Orders.Where(e => e.Id.Equals(input.OrderId) && e.Deleted == false && e.Status == 1).FirstOrDefault();
-                if (order == null || input.Items == null)
+                if (order == null)
                 {
-                    output.Status = "INPUT_IS_NULL";
+                    output.Status = "ORDER_NOT_EXIST";
                 }
                 else
                 {
-                    foreach (CreateOrderItem item in input.Items)
+                    if (input.Items != null)
                     {
-                        OrderItem orderItem = order.OrderItems.Where(e => e.MenuItem.Id.Equals(item.ItemId) && e.Deleted == false).FirstOrDefault();
-                        MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(item.ItemId) && e.Deleted == false).FirstOrDefault();
-                        sum += (decimal) item.Quantity * menuItem.Price;
-                        if (orderItem == null)
+                        foreach (CreateOrderItem item in input.Items)
                         {
-                            OrderItem newItem = new OrderItem()
+                            OrderItem orderItem = order.OrderItems.Where(e => e.MenuItem.Id.Equals(item.ItemId) && e.Deleted == false).FirstOrDefault();
+                            MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(item.ItemId) && e.Deleted == false).FirstOrDefault();
+                            sum += (decimal)item.Quantity * menuItem.Price;
+                            if (orderItem == null)
                             {
-                                Order = order,
-                                MenuItem = menuItem,
-                                UnitPrice = menuItem.Price,
-                                Quantity = item.Quantity
-                            };
+                                OrderItem newItem = new OrderItem()
+                                {
+                                    Order = order,
+                                    MenuItem = menuItem,
+                                    UnitPrice = menuItem.Price,
+                                    Quantity = item.Quantity
+                                };
 
-                            if (order.OrderItems == null)
+                                if (order.OrderItems == null)
+                                {
+                                    order.OrderItems = new List<OrderItem>();
+                                }
+
+                                order.OrderItems.Add(newItem);
+                            }
+                            else
                             {
-                                order.OrderItems = new List<OrderItem>();
+                                orderItem.Quantity += item.Quantity;
                             }
 
-                            order.OrderItems.Add(newItem);
-                        } else
-                        {
-                            orderItem.Quantity += item.Quantity;
+                            output.Status = "OK";
+                            _db.SaveChanges();
                         }
-
-                        output.Status = "OK";
-                        _db.SaveChanges();
                     }
 
+                    output.Status = "OK";
                     order.Amount += sum;
                     _db.SaveChanges();
                 }

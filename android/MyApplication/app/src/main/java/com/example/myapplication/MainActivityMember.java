@@ -26,4 +26,9 @@ public class MainActivityMember extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

@@ -21,6 +21,8 @@ public class SessionService {
     private static Drawable QRLoginDrawable;
     private static String captureId;
     private static int type = 1;
+    private static boolean isMember = false;
+    private static boolean newUser = true;
 
     public static void setTemporarySession(String newSessionId, String newSessionKey) {
         sessionId = newSessionId;
@@ -65,5 +67,21 @@ public class SessionService {
 
     public static void setType(int type) {
         SessionService.type = type;
+    }
+
+    public static boolean isMember() {
+        return isMember;
+    }
+
+    public static void setIsMember(boolean isMember) {
+        SessionService.isMember = isMember;
+    }
+
+    public static boolean isNewUser() {
+        return newUser;
+    }
+
+    public static void setNewUser(boolean newUser) {
+        SessionService.newUser = newUser;
     }
 }
