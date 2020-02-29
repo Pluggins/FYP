@@ -174,6 +174,60 @@ namespace FYP.Controllers.Api
 
         [AllowAnonymous]
         [HttpPost]
+        [Route("Api/Order/AddItemByOrderIdSeparate")]
+        public CreateOrderOutput AddItemByOrderIdSeparate([FromBody] CreateOrderInput input)
+        {
+            decimal sum = 0;
+            CreateOrderOutput output = new CreateOrderOutput();
+            if (input == null)
+            {
+                output.Status = "INPUT_IS_NULL";
+            } else
+            {
+                Order order = _db.Orders.Where(e => e.Id.Equals(input.OrderId) && e.Deleted == false && e.Status == 1).FirstOrDefault();
+                if (order == null)
+                {
+                    output.Status = "ORDER_NOT_EXIST";
+                }
+                else
+                {
+                    if (input.Items != null)
+                    {
+                        foreach (CreateOrderItem item in input.Items)
+                        {
+                            MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(item.ItemId) && e.Deleted == false).FirstOrDefault();
+                            sum += (decimal)item.Quantity * menuItem.Price;
+                            OrderItem newItem = new OrderItem()
+                            {
+                                Order = order,
+                                MenuItem = menuItem,
+                                UnitPrice = menuItem.Price,
+                                Quantity = item.Quantity
+                            };
+
+                            if (order.OrderItems == null)
+                            {
+                                order.OrderItems = new List<OrderItem>();
+                            }
+
+                            order.OrderItems.Add(newItem);
+
+                            output.Status = "OK";
+                            _db.SaveChanges();
+                        }
+                    }
+
+                    output.Status = "OK";
+                    order.Amount += sum;
+                    _db.SaveChanges();
+                }
+            }
+            
+            return output;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
         [Route("Api/Order/SelfList")]
         public List<RetrieveOrderListOutput> RetrieveOrderList_Self([FromBody] RetrieveOrderListInput input)
         {

@@ -16,6 +16,7 @@ namespace FYP.Models
         public string ShortDesc { get; set; }
         public string LongDesc { get; set; }
         public virtual Menu Menu { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Price { get; set; }
 
         public MenuItem()

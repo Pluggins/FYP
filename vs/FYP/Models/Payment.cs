@@ -14,6 +14,7 @@ namespace FYP.Models
         public string Id { get; set; }
         public virtual Order Order { get; set; }
         public string NickName { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Amount { get; set; }
         /*
          * status

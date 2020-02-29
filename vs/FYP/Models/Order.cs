@@ -22,6 +22,7 @@ namespace FYP.Models
         public virtual User User { get; set; }
         [Required]
         public virtual Vendor Vendor { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Amount { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }

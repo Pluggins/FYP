@@ -15,7 +15,9 @@ namespace FYP.Models
         public virtual Order Order { get; set; }
         public virtual MenuItem MenuItem { get; set; }
         public virtual ICollection<PaymentItem> PaymentItems { get; set; }
+        public int Status { get; set; }
         public double Quantity { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal UnitPrice { get; set; }
         public double Remark { get; set; }
 
@@ -23,6 +25,7 @@ namespace FYP.Models
         {
             Id = Guid.NewGuid().ToString();
             Quantity = 0;
+            Status = 1;
         }
     }
 }
