@@ -3,7 +3,12 @@
     ViewData["Title"] = "Index";
 }
 @model FYP.Models.ViewModels.MenuItemListViewModel
+@using System.Globalization
+@{
 
+        NumberFormatInfo nfi = new CultureInfo( "ms-MY", false ).NumberFormat;
+        nfi.CurrencyDecimalDigits = 2;
+}
 <div class="theme-title">
     <div>
         @Model.Menu.Name
@@ -20,20 +25,20 @@
             int count = Model.MenuItems.Count;
             if (count == 0)
             {
-                <div style="height:350px;">
-                    <div style="width:70%; margin:0 auto; margin-top:20px; position:relative;height: 280px; border: 2px solid black;text-align:center;background-color:#ffa8a8;border-radius:10px;">
-                        <div style="width: 100%; position: absolute; top: 50%; -ms-transform: translateY(-50%); transform: translateY(-50%);">
-                            <img src="~/lib/icons/construction-and-tools.png" width="100" />
-                            <div style="font-size:32px; margin-top:19px;">The menu is empty.</div>
-                            <div style="font-size:20px;">Create a new item to have it shown here!</div>
-                        </div>
+            <div style="height:350px;">
+                <div style="width:70%; margin:0 auto; margin-top:20px; position:relative;height: 280px; border: 2px solid black;text-align:center;background-color:#ffa8a8;border-radius:10px;">
+                    <div style="width: 100%; position: absolute; top: 50%; -ms-transform: translateY(-50%); transform: translateY(-50%);">
+                        <img src="~/lib/icons/construction-and-tools.png" width="100" />
+                        <div style="font-size:32px; margin-top:19px;">The menu is empty.</div>
+                        <div style="font-size:20px;">Create a new item to have it shown here!</div>
                     </div>
                 </div>
+            </div>
             }
             else
             {
-                
-                @while (count > 0)
+
+            @while (count > 0)
                 {
                     MenuItem item2 = null;
                     MenuItem item3 = null;
@@ -62,77 +67,77 @@
                         count--;
                     }
 
-                    <div class="row" style="margin-bottom:30px;">
-                        <div class="col-3">
-                            <div class="item-card">
-                                <div>
-                                    <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item1.Id" onclick="removeItem('@item1.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
-                                </div>
-                                <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
-                                </div>
-                                <div class="item-label-box">
-                                    <div class="item-label">
-                                        @item1.Name
-                                    </div>
-                                </div>
-                                <div class="item-price">@item1.Price.ToString("C")</div>
+            <div class="row" style="margin-bottom:30px;">
+                <div class="col-3">
+                    <div class="item-card">
+                        <div>
+                            <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item1.Id" onclick="removeItem('@item1.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                        </div>
+                        <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                        </div>
+                        <div class="item-label-box">
+                            <div class="item-label">
+                                @item1.Name
                             </div>
                         </div>
-                        @if (item2 != null)
-                        {
-                            <div class="col-3">
-                                <div class="item-card">
-                                    <div>
-                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item2.Id" onclick="removeItem('@item2.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
-                                    </div>
-                                    <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
-                                    </div>
-                                    <div class="item-label-box">
-                                        <div class="item-label">
-                                            @item2.Name
-                                        </div>
-                                    </div>
-                                    <div class="item-price">@item2.Price.ToString("C")</div>
-                                </div>
-                            </div>
-                        }
-                        @if (item3 != null)
-                        {
-                            <div class="col-3">
-                                <div class="item-card">
-                                    <div>
-                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item3.Id" onclick="removeItem('@item3.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
-                                    </div>
-                                    <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
-                                    </div>
-                                    <div class="item-label-box">
-                                        <div class="item-label">
-                                            @item3.Name
-                                        </div>
-                                    </div>
-                                    <div class="item-price">@item3.Price.ToString("C")</div>
-                                </div>
-                            </div>
-                        }
-                        @if (item4 != null)
-                        {
-                            <div class="col-3">
-                                <div class="item-card">
-                                    <div>
-                                        <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item4.Id" onclick="removeItem('@item4.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
-                                    </div>
-                                    <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
-                                    </div>
-                                    <div class="item-label-box">
-                                        <div class="item-label">
-                                            @item4.Name
-                                        </div>
-                                    </div>
-                                    <div class="item-price">@item4.Price.ToString("C")</div>
-                                </div>
-                            </div>
-                        }
+                        <div class="item-price">@item1.Price.ToString("C", nfi)</div>
                     </div>
+                </div>
+                @if (item2 != null)
+                        {
+                <div class="col-3">
+                    <div class="item-card">
+                        <div>
+                            <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item2.Id" onclick="removeItem('@item2.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                        </div>
+                        <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                        </div>
+                        <div class="item-label-box">
+                            <div class="item-label">
+                                @item2.Name
+                            </div>
+                        </div>
+                        <div class="item-price">@item2.Price.ToString("C", nfi)</div>
+                    </div>
+                </div>
+                        }
+                @if (item3 != null)
+                        {
+                <div class="col-3">
+                    <div class="item-card">
+                        <div>
+                            <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item3.Id" onclick="removeItem('@item3.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                        </div>
+                        <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                        </div>
+                        <div class="item-label-box">
+                            <div class="item-label">
+                                @item3.Name
+                            </div>
+                        </div>
+                        <div class="item-price">@item3.Price.ToString("C", nfi)</div>
+                    </div>
+                </div>
+                        }
+                @if (item4 != null)
+                        {
+                <div class="col-3">
+                    <div class="item-card">
+                        <div>
+                            <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item4.Id" onclick="removeItem('@item4.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
+                        </div>
+                        <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                        </div>
+                        <div class="item-label-box">
+                            <div class="item-label">
+                                @item4.Name
+                            </div>
+                        </div>
+                        <div class="item-price">@item4.Price.ToString("C", nfi)</div>
+                    </div>
+                </div>
+                        }
+            </div>
                 }
             }
         }

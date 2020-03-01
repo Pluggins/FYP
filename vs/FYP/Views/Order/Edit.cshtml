@@ -1,9 +1,15 @@
 ﻿
 @model FYP.Models.ViewModels.OrderListViewModel
+@using System.Globalization
 
 <div class="theme-title">
     <div>
         @Model.SelectedVendor.Name<span> Customer Orders</span>
+        @{
+        
+        NumberFormatInfo nfi = new CultureInfo( "ms-MY", false ).NumberFormat;
+        nfi.CurrencyDecimalDigits = 2;
+        }
     </div>
 </div>
 <div style="padding:30px 50px;">
@@ -12,24 +18,24 @@
         <div class="col-4">
             @if (Model.VendorList.Count() > 1)
             {
-                <div style="text-align: center; border: 2px solid #7d491b; padding-bottom: 5px; background-color: #ffd4b4;">
-                    <div>Select Your Vendor</div>
-                    <select style="text-wrap:normal" id="vendorSelect" onchange="redirectToVendor(this)">
-                        @foreach (Vendor item in Model.VendorList)
+            <div style="text-align: center; border: 2px solid #7d491b; padding-bottom: 5px; background-color: #ffd4b4;">
+                <div>Select Your Vendor</div>
+                <select style="text-wrap:normal" id="vendorSelect" onchange="redirectToVendor(this)">
+                    @foreach (Vendor item in Model.VendorList)
                         {
                             if (item.Id == Model.SelectedVendor.Id)
                             {
-                                <option value="@item.Id" selected="selected">@item.Name</option>
+                    <option value="@item.Id" selected="selected">@item.Name</option>
                             }
                             else
                             {
-                                <option value="@item.Id">@item.Name</option>
+                    <option value="@item.Id">@item.Name</option>
                             }
 
                         }
 
-                    </select>
-                </div>
+                </select>
+            </div>
             }
         </div>
     </div>
@@ -47,12 +53,12 @@
             <tbody>
                 @foreach (Order item in Model.OrderList)
                 {
-                    <tr>
-                        <td><a href="/OrderItem/@item.Id">@item.Id</a></td>
-                        <td>@item.DateCreated</td>
-                        <td>@item.Amount.ToString("C")</td>
-                        <td><button class="btn btn-danger" id="m-@item.Id" onclick="deleteOrder('@item.Id',this)">Delete</button></td>
-                    </tr>
+                <tr>
+                    <td><a href="/OrderItem/@item.Id">@item.Id</a></td>
+                    <td>@item.DateCreated</td>
+                    <td>@item.Amount.ToString("C",nfi)</td>
+                    <td><button class="btn btn-danger" id="m-@item.Id" onclick="deleteOrder('@item.Id',this)">Delete</button></td>
+                </tr>
                 }
             </tbody>
         </table>
