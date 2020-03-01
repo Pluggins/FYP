@@ -205,7 +205,7 @@ public class CartFragment extends Fragment {
             String response = null;
             URL url = null;
             try {
-                url = new URL("https://fyp.amazecraft.net/Api/Order/AddItemByOrderId");
+                url = new URL("https://fyp.amazecraft.net/Api/Order/AddItemByOrderIdSeparate");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

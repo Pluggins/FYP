@@ -50,7 +50,7 @@
                     <tr>
                         <td><a href="/OrderItem/@item.Id">@item.Id</a></td>
                         <td>@item.DateCreated</td>
-                        <td>@item.Amount</td>
+                        <td>@item.Amount.ToString("C")</td>
                         <td><button class="btn btn-danger" id="m-@item.Id" onclick="deleteOrder('@item.Id',this)">Delete</button></td>
                     </tr>
                 }
