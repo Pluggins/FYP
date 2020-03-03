@@ -26,7 +26,7 @@ namespace FYP.Services
             HttpResponseMessage response = null;
             HttpClient client = new HttpClient(handler);
 
-            string s = "{\"intent\": \"CAPTURE\",\"purchase_units\": [{\"amount\": {\"currency_code\": \"MYR\", \"value\": " + amount + "}}]}";
+            string s = "{\"intent\": \"CAPTURE\",\"purchase_units\": [{\"amount\": {\"currency_code\": \"MYR\", \"value\": " + amount.ToString("F2") + "}}]}";
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + await GenerateToken());
             queryString = new StringContent(s, Encoding.UTF8, "application/json");
             queryString.Headers.Remove("Content-Type");

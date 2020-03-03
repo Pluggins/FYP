@@ -15,6 +15,12 @@ namespace FYP.Models
         public virtual Order Order { get; set; }
         public virtual MenuItem MenuItem { get; set; }
         public virtual ICollection<PaymentItem> PaymentItems { get; set; }
+        /*
+         * Status
+         * 0 - Cancelled
+         * 1 - Active
+         * 2 - Paid
+         */
         public int Status { get; set; }
         public double Quantity { get; set; }
         [Column(TypeName = "decimal(18,4)")]

@@ -1,6 +1,11 @@
 ﻿
 @model FYP.Models.ViewModels.OrderItemListViewModel
-
+@using System.Globalization;
+@{
+    
+    NumberFormatInfo nfi = new CultureInfo("ms-MY", false).NumberFormat;
+    nfi.CurrencyDecimalDigits = 2;
+}
 <div class="theme-title">
     <div>
         @Model.SelectedVendor.Name<span> Customer Orders</span>
@@ -25,7 +30,7 @@
                     <tr>
                         <td>@item.MenuItem.Name</td>
                         <td>@item.Quantity</td>
-                        <td>@item.UnitPrice</td>
+                        <td>@item.UnitPrice.ToString("C", nfi)</td>
                         <td><button class="btn btn-danger" id="m-@item.Id" onclick="deleteOrder('@item.Id',this)">Delete</button></td>
                     </tr>
                 }

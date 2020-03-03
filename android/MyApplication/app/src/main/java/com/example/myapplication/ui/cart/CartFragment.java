@@ -127,6 +127,18 @@ public class CartFragment extends Fragment {
         inflater.inflate(R.menu.top_cart_menu, menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.myOrderBtn:
+
+                return true;
+
+        }
+        return true;
+    }
+
     private class SubmitOrderList extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String[] params) {
@@ -224,6 +236,74 @@ public class CartFragment extends Fragment {
                 OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                 String newJson = json.toString().replace("\"[", "[").replace("]\"", "]").replace("\\\"", "\"");
                 wr.write(newJson);
+                wr.flush();
+
+                try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    StringBuilder sb = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        sb.append(responseLine.trim());
+                    }
+                    response = sb.toString();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NetworkOnMainThreadException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String message) {
+            try {
+                JSONObject obj = new JSONObject(message);
+                String status = obj.getString("status");
+                if (status.equals("OK")) {
+                    CartService.clear();
+                    aAdapter.clear();
+                    aAdapter.notifyDataSetChanged();
+                    Snackbar.make(root, "Order has been submitted successfully.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } else {
+                    Snackbar.make(root, "Error encountered, please try again.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            bar.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    private class LoadOrderList extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String[] params) {
+            String response = null;
+            URL url = null;
+            try {
+                url = new URL("https://fyp.amazecraft.net/Api/Order/GetActiveOrderById");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setDoInput(true);
+
+                JSONObject json = new JSONObject();
+                json.put("orderId", OrderService.getOrderId());
+
+                OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                wr.write(json.toString());
                 wr.flush();
 
                 try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
