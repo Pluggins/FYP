@@ -168,7 +168,9 @@ namespace FYP.Controllers.Api
                                 Name = item.Name,
                                 ShortDesc = item.ShortDesc,
                                 LongDesc = item.LongDesc,
-                                Price = item.Price.ToString()
+                                Price = item.Price.ToString(),
+                                ImgUrl = item.ImgUrl,
+                                WaitingTime = item.WaitingTime
                             };
                             newMenuItemList.Add(menuItem);
                         }

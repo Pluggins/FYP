@@ -69,7 +69,10 @@ namespace FYP
             }
             app.UseStatusCodePagesWithRedirects("/error/{0}");
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes = true
+            });
 
             app.UseRouting();
 

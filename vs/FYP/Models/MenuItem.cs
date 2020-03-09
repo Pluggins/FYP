@@ -15,6 +15,8 @@ namespace FYP.Models
         public string Name { get; set; }
         public string ShortDesc { get; set; }
         public string LongDesc { get; set; }
+        public string ImgUrl { get; set; }
+        public string WaitingTime { get; set; }
         public virtual Menu Menu { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal Price { get; set; }
