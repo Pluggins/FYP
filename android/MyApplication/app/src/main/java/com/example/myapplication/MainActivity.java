@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // R.menu.mymenu is a reference to an xml file named mymenu.xml which should be inside your res/menu directory.
@@ -40,4 +41,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.top_cart_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+     */
 }

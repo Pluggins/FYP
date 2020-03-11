@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.myapplication.OrderActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.CartAdapter;
 import com.example.myapplication.adapter.MenuAdapter;
@@ -78,6 +79,7 @@ public class CartFragment extends Fragment {
             public void onChanged(@Nullable String s) {
             }
         });
+        setHasOptionsMenu(true);
 
         bar = (ProgressBar) root.findViewById(R.id.cart_progressbar);
         dialogClickListener = new DialogInterface.OnClickListener() {
@@ -122,21 +124,24 @@ public class CartFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(android.view.Menu menu, MenuInflater inflater) {
-        // R.menu.mymenu is a reference to an xml file named mymenu.xml which should be inside your res/menu directory.
-        // If you don't have res/menu, just create a directory named "menu" inside res
         inflater.inflate(R.menu.top_cart_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.myOrderBtn:
-
+                bar.setVisibility(View.VISIBLE);
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                LoadOrderList loadOrderList = new LoadOrderList();
+                loadOrderList.execute();
                 return true;
 
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
     private class SubmitOrderList extends AsyncTask<String, Void, String> {
@@ -328,24 +333,30 @@ public class CartFragment extends Fragment {
         @Override
         protected void onPostExecute(String message) {
             try {
+                OrderService.clearOrder();
                 JSONObject obj = new JSONObject(message);
-                String status = obj.getString("status");
-                if (status.equals("OK")) {
-                    CartService.clear();
-                    aAdapter.clear();
-                    aAdapter.notifyDataSetChanged();
-                    Snackbar.make(root, "Order has been submitted successfully.", Snackbar.LENGTH_LONG)
+                if (obj.getString("result").equals("ORDER_NOT_EXIST")) {
+                    Snackbar.make(root, "Please submit an order first.", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    bar.setVisibility(View.GONE);
+                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 } else {
-                    Snackbar.make(root, "Error encountered, please try again.", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    JSONArray jArray = obj.getJSONArray("items");
+                    for (int i = 0; i < jArray.length() ; i++) {
+                        JSONObject tmpObj = jArray.getJSONObject(i);
+                        if (tmpObj.getInt("status") == 1) {
+                            OrderMenuItem menuItem = new OrderMenuItem(tmpObj.getString("orderItemId"), tmpObj.getString("name"), tmpObj.getDouble("orderItemUnitPrice"), tmpObj.getInt("quantity"), tmpObj.getInt("status"));
+                            OrderService.addItem(menuItem);
+                        }
+                    }
+                    bar.setVisibility(View.GONE);
+                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    Intent intent = new Intent(getActivity(), OrderActivity.class);
+                    startActivity(intent);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            bar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
 }

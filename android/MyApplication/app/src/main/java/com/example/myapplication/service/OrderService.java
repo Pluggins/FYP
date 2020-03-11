@@ -38,4 +38,8 @@ public class OrderService {
     public static void addItem(OrderMenuItem item) {
         items.add(item);
     }
+
+    public static void clearOrder() {
+        items = new ArrayList<OrderMenuItem>();
+    }
 }

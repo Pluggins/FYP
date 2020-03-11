@@ -11,8 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivityMember"
-            android:label="Member"></activity>
+        <activity
+            android:name=".OrderActivity"
+            android:label="Order Summary"></activity>
+        <activity
+            android:name=".MainActivityMember"
+            android:label="Member" />
         <activity android:name=".MemberLogin" />
         <activity
             android:name=".AddItem"

@@ -25,12 +25,11 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:backgroundTint="#00FFFFFF"
         android:indeterminate="true"
         android:indeterminateTint="#1a09d6"
         android:max="100"
-        android:visibility="gone"
-        android:layout_gravity="bottom|end"
-        />
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
