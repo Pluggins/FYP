@@ -89,12 +89,20 @@ public class OrderAdapter extends ArrayAdapter<OrderMenuItem> {
                 alert.setTitle("Set Quantity");
                 alert.setMessage("Please input the quantity to pay.");
                 final EditText input = new EditText((Activity)mContext);
-
+                alert.setView(input);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        if (Integer.parseInt(input.getText().toString()) <= orderItem.getQuantity() && Integer.parseInt(input.getText().toString()) >= 0) {
+                            orderItemQuantity.setText(String.valueOf(orderItem.getQuantity()) + " ("+input.getText().toString()+")");
+                            orderItem.setSelectedQuantity(Integer.parseInt(input.getText().toString()));
+                        } else if (Integer.parseInt(input.getText().toString()) < 0) {
+                            orderItemQuantity.setText(String.valueOf(orderItem.getQuantity()) + " (0)");
+                            orderItem.setSelectedQuantity(0);
+                        } else {
+                            orderItemQuantity.setText(String.valueOf(orderItem.getQuantity()) + " ("+orderItem.getQuantity()+")");
+                            orderItem.setSelectedQuantity(orderItem.getQuantity());
+                        }
 
-                        orderItemQuantity.setText(String.valueOf(orderItem.getQuantity()) + " (1)");
-                        orderItem.setSelectedQuantity(1);
                         /*
                         items.set(pos, input.getText().toString());
                         adapterObject.notifyDataSetChanged();  // the adapter you set in the listView.setAdapter();
