@@ -60,11 +60,11 @@ public class OrderActivity extends AppCompatActivity {
 
                 if (isAllItem) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("Would you want to pay for all the items now?").setPositiveButton("Yes", dialogClickListener)
+                    builder.setMessage("Would you like to pay for all the items now?").setPositiveButton("Yes", dialogClickListener)
                             .setNegativeButton("No", dialogClickListener).show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("Would you want to pay for the selected items now?").setPositiveButton("Yes", dialogClickListener)
+                    builder.setMessage("Would you like to pay for the selected items now?").setPositiveButton("Yes", dialogClickListener)
                             .setNegativeButton("No", dialogClickListener).show();
                 }
 
