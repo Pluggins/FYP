@@ -156,7 +156,7 @@ namespace FYP.Controllers.Api
                 output.Status = "INPUT_IS_NULL";
             } else
             {
-                Payment payment = _db.Payments.Where(e => e.Deleted == false && e.Status.Equals(1) && e.Id.Equals(input.PaymentId)).FirstOrDefault();
+                Payment payment = _db.Payments.Where(e => e.Deleted == false && e.Id.Equals(input.PaymentId)).FirstOrDefault();
                 
                 if (payment == null)
                 {
@@ -164,23 +164,40 @@ namespace FYP.Controllers.Api
                 }
                 else
                 {
+
                     output = await PaymentService.CheckPaypal(payment.MethodId);
                     if (output.Status == "APPROVED")
                     {
+                        List<PaymentItem> paymentItems = payment.PaymentItems.Where(e => e.Deleted == false).ToList();
+                        bool paidAll = true;
+
+                        foreach (PaymentItem item in paymentItems)
+                        {
+                            item.OrderItem.Status = 2;
+                        }
                         payment.Status = 2;
                         _db.SaveChanges();
+
+                        foreach (OrderItem item in payment.Order.OrderItems.Where(e => e.Deleted == false))
+                        {
+                            if (item.Status == 1)
+                            {
+                                paidAll = false;
+                            }
+                        }
+                        
+                        if (paidAll)
+                        {
+                            output.PaidAll = true;
+                        } else
+                        {
+                            output.PaidAll = false;
+                        }
                     }
                 }
             }
             
             return output;
-        }
-
-        [HttpPost]
-        [Route("Api/Test2")]
-        public string DoTest2()
-        {
-            return _hostingEnvironment.ContentRootPath;
         }
     }
 }

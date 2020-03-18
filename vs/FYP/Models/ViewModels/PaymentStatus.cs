@@ -18,5 +18,6 @@ namespace FYP.Models.ViewModels
         public string PayerSurname { get; set; }
         public string PayerId { get; set; }
         public string Status { get; set; }
+        public bool PaidAll { get; set; }
     }
 }
