@@ -259,7 +259,7 @@ namespace FYP.Controllers.Api
         [AllowAnonymous]
         [HttpPost]
         [Route("Api/Order/GetActiveOrderById")]
-        public OrderInfoOutput GetOrderById([FromBody] OrderInfoInput input)
+        public OrderInfoOutput GetActiveOrderById([FromBody] OrderInfoInput input)
         {
             OrderInfoOutput output = new OrderInfoOutput();
             if (input == null)
@@ -274,22 +274,51 @@ namespace FYP.Controllers.Api
                 } else
                 {
                     List<OrderInfoItem> orderInfoItems = new List<OrderInfoItem>();
-                    foreach (OrderItem item in order.OrderItems.OrderBy(e => e.Status).ToList())
+                    foreach (OrderItem item in order.OrderItems.ToList())
                     {
-                        OrderInfoItem newItem = new OrderInfoItem()
+                        if (item.QuantityPaid > 0)
                         {
-                            Name = item.MenuItem.Name,
-                            OrderItemId = item.Id,
-                            OrderItemUnitPrice = item.MenuItem.Price,
-                            Quantity = item.Quantity,
-                            Status = item.Status
-                        };
+                            OrderInfoItem newItem = new OrderInfoItem()
+                            {
+                                Name = item.MenuItem.Name,
+                                OrderItemId = item.Id,
+                                OrderItemUnitPrice = item.MenuItem.Price,
+                                Quantity = item.QuantityPaid,
+                                Status = 2
+                            };
 
-                        orderInfoItems.Add(newItem);
+                            orderInfoItems.Add(newItem);
+
+                            if (item.Quantity - item.QuantityPaid > 0)
+                            {
+                                OrderInfoItem newItem2 = new OrderInfoItem()
+                                {
+                                    Name = item.MenuItem.Name,
+                                    OrderItemId = item.Id,
+                                    OrderItemUnitPrice = item.MenuItem.Price,
+                                    Quantity = item.Quantity - item.QuantityPaid,
+                                    Status = 1
+                                };
+
+                                orderInfoItems.Add(newItem2);
+                            }
+                        } else
+                        {
+                            OrderInfoItem newItem = new OrderInfoItem()
+                            {
+                                Name = item.MenuItem.Name,
+                                OrderItemId = item.Id,
+                                OrderItemUnitPrice = item.MenuItem.Price,
+                                Quantity = item.Quantity,
+                                Status = item.Status
+                            };
+
+                            orderInfoItems.Add(newItem);
+                        }
                     }
 
                     output.Result = "OK";
-                    output.Items = orderInfoItems;
+                    output.Items = orderInfoItems.OrderBy(e => e.Status).ToList();
                 }
             }
             return output;

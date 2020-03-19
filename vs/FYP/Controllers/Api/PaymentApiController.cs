@@ -50,26 +50,20 @@ namespace FYP.Controllers.Api
                         if (order.Status == 1)
                         {
                             List<OrderItem> orderItems = order.OrderItems.Where(e => e.Deleted == false).ToList();
-                            List<PaymentOrderItem> currentOrderItems = new List<PaymentOrderItem>();
                             List<PaymentItem> paymentItems = new List<PaymentItem>();
                             decimal sum = 0;
 
-                            foreach (OrderItem item in orderItems)
+                            foreach (OrderItem item in orderItems.Where(e => e.Status == 1))
                             {
-                                PaymentOrderItem newItem = new PaymentOrderItem()
+                                PaymentItem pItem = new PaymentItem()
                                 {
-                                    Id = item.Id,
-                                    MenuItem = item.MenuItem,
-                                    Order = item.Order,
-                                    Quantity = item.Quantity,
-                                    UnitPrice = item.UnitPrice
+                                    OrderItem = orderItems.Where(e => e.Id.Equals(item.Id)).FirstOrDefault(),
+                                    Quantity = item.Quantity - item.QuantityPaid
                                 };
-                                currentOrderItems.Add(newItem);
-                            }
-                            
-                            foreach (PaymentOrderItem item in currentOrderItems)
-                            {
-                                sum += item.UnitPrice * (decimal)item.Quantity;
+
+                                sum += item.UnitPrice * (decimal) (item.Quantity - item.QuantityPaid);
+                                paymentItems.Add(pItem);
+                                _db.PaymentItems.Add(pItem);
                             }
 
                             if (sum > 0)
@@ -83,24 +77,9 @@ namespace FYP.Controllers.Api
                                     Method = "PAYPAL",
                                     MethodId = paymentService.PaymentId
                                 };
+                                newPayment.PaymentItems = paymentItems;
+
                                 _db.Payments.Add(newPayment);
-
-                                newPayment.PaymentItems = new List<PaymentItem>();
-
-                                foreach (PaymentOrderItem item in currentOrderItems)
-                                {
-                                    if (item.Quantity > 0)
-                                    {
-                                        PaymentItem pItem = new PaymentItem()
-                                        {
-                                            OrderItem = orderItems.Where(e => e.Id.Equals(item.Id)).FirstOrDefault(),
-                                            Quantity = item.Quantity
-                                        };
-
-                                        newPayment.PaymentItems.Add(pItem);
-                                        _db.PaymentItems.Add(pItem);
-                                    }
-                                }
                                 _db.SaveChanges();
                                 output.Amount = sum;
                                 output.Result = "OK";
@@ -158,7 +137,7 @@ namespace FYP.Controllers.Api
                                 OrderItem existingOrderItem = order.OrderItems.Where(e => e.Id.Equals(item.OrderItemId) && e.Status == 1 && e.Deleted == false).FirstOrDefault();
                                 if (existingOrderItem != null)
                                 {
-                                    sum += existingOrderItem.MenuItem.Price * item.Quantity;
+                                    sum += existingOrderItem.UnitPrice * item.Quantity;
                                     PaymentItem pItem = new PaymentItem()
                                     {
                                         OrderItem = existingOrderItem,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -159,6 +160,8 @@ namespace FYP.Controllers.Api
                     {
                         List<MenuItem> menuItemList = menu.MenuItems.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
                         List<MenuItemInfo> newMenuItemList = new List<MenuItemInfo>();
+                        NumberFormatInfo nfi = new CultureInfo("ms-MY", false).NumberFormat;
+                        nfi.CurrencyDecimalDigits = 2;
 
                         foreach (MenuItem item in menuItemList)
                         {
@@ -168,7 +171,7 @@ namespace FYP.Controllers.Api
                                 Name = item.Name,
                                 ShortDesc = item.ShortDesc,
                                 LongDesc = item.LongDesc,
-                                Price = item.Price.ToString(),
+                                Price = item.Price.ToString("C", nfi),
                                 ImgUrl = item.ImgUrl,
                                 WaitingTime = item.WaitingTime
                             };
