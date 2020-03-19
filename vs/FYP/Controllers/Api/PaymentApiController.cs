@@ -51,7 +51,6 @@ namespace FYP.Controllers.Api
                         {
                             List<OrderItem> orderItems = order.OrderItems.Where(e => e.Deleted == false).ToList();
                             List<PaymentOrderItem> currentOrderItems = new List<PaymentOrderItem>();
-                            List<Payment> payments = order.Payments.Where(e => e.Status == 2).ToList();
                             List<PaymentItem> paymentItems = new List<PaymentItem>();
                             decimal sum = 0;
 
@@ -67,25 +66,6 @@ namespace FYP.Controllers.Api
                                 };
                                 currentOrderItems.Add(newItem);
                             }
-
-                            foreach (Payment item in payments)
-                            {
-                                List<PaymentItem> tmpPaymentItem = item.PaymentItems.ToList();
-                                foreach (PaymentItem subItem in tmpPaymentItem)
-                                {
-                                    paymentItems.Add(subItem);
-                                }
-                            }
-
-                            foreach (PaymentItem item in paymentItems)
-                            {
-                                PaymentOrderItem orderItem = currentOrderItems.Where(e => e.Id.Equals(item.OrderItem.Id)).FirstOrDefault();
-                                if (orderItem != null)
-                                {
-                                    orderItem.Quantity -= item.Quantity;
-                                }
-                            }
-
                             
                             foreach (PaymentOrderItem item in currentOrderItems)
                             {
@@ -145,6 +125,88 @@ namespace FYP.Controllers.Api
             }
             return output;
         }
+
+        [HttpPost]
+        [Route("Api/Payment/PaySelectiveByOrderItemId")]
+        public async Task<PaymentInfoOutput> PaySelectiveByOrderItemId([FromBody] PaymentInfoInput input)
+        {
+            PaymentInfoOutput output = new PaymentInfoOutput();
+            if (input == null)
+            {
+                output.Result = "INPUT_IS_NULL";
+            } else
+            {
+                if (string.IsNullOrEmpty(input.OrderId))
+                {
+                    output.Result = "INPUT_IS_NULL";
+                } else
+                {
+                    Order order = _db.Orders.Where(e => e.Id.Equals(input.OrderId) && e.Deleted == false).FirstOrDefault();
+                    if (order == null)
+                    {
+                        output.Result = "ORDER_DOES_NOT_EXIST";
+                    } else
+                    {
+                        if (order.Status == 1)
+                        {
+                            List<OrderItem> orderItems = order.OrderItems.Where(e => e.Deleted == false).ToList();
+                            List<PaymentItem> paymentItems = new List<PaymentItem>();
+                            decimal sum = 0;
+
+                            foreach (PaymentInfoItem item in input.OrderItems)
+                            {
+                                OrderItem existingOrderItem = order.OrderItems.Where(e => e.Id.Equals(item.OrderItemId) && e.Status == 1 && e.Deleted == false).FirstOrDefault();
+                                if (existingOrderItem != null)
+                                {
+                                    sum += existingOrderItem.MenuItem.Price * item.Quantity;
+                                    PaymentItem pItem = new PaymentItem()
+                                    {
+                                        OrderItem = existingOrderItem,
+                                        Quantity = item.Quantity
+                                    };
+                                    paymentItems.Add(pItem);
+                                }
+                            }
+
+                            if (sum > 0)
+                            {
+                                PaymentServiceOutput paymentService = await PaymentService.InitPaypalAsync(sum);
+                                Payment newPayment = new Payment()
+                                {
+                                    Amount = sum,
+                                    Status = 1,
+                                    Order = order,
+                                    Method = "PAYPAL",
+                                    MethodId = paymentService.PaymentId
+                                };
+                                _db.Payments.Add(newPayment);
+
+                                newPayment.PaymentItems = paymentItems;
+
+                                _db.SaveChanges();
+                                output.Amount = sum;
+                                output.Result = "OK";
+                                output.PaymentId = newPayment.Id;
+                                output.PaymentLink = paymentService.PaymentLink;
+                                string[] urlFrag = Request.GetDisplayUrl().Split('/');
+                                output.PaymentLinkQR = urlFrag[0]+"//"+urlFrag[2] + "/qrcode/" + QRCodeService.GenerateQRCode(_hostingEnvironment, output.PaymentLink);
+                            }
+                            else
+                            {
+                                order.Status = 2;
+                                _db.SaveChanges();
+                                output.Amount = sum;
+                                output.Result = "PAID";
+                            }
+                        } else
+                        {
+                            output.Result = "PAID_OR_EXPIRED";
+                        }
+                    }
+                }
+            }
+            return output;
+        }
         
         [HttpPost]
         [Route("Api/Payment/CheckPaypalOrder")]
@@ -169,14 +231,28 @@ namespace FYP.Controllers.Api
                     if (output.Status == "APPROVED")
                     {
                         List<PaymentItem> paymentItems = payment.PaymentItems.Where(e => e.Deleted == false).ToList();
+                        List<OrderItem> orderItems = _db.Orders.Where(e => e.Id.Equals(payment.Order.Id) && e.Deleted == false).FirstOrDefault().OrderItems.Where(e => e.Deleted == false).ToList();
                         bool paidAll = true;
-
-                        foreach (PaymentItem item in paymentItems)
+                        if (payment.Status != 2)
                         {
-                            item.OrderItem.Status = 2;
+                            foreach (PaymentItem item in paymentItems)
+                            {
+                                OrderItem tmpItem = orderItems.Where(e => e.Id.Equals(item.OrderItem.Id) && e.Deleted == false).FirstOrDefault();
+                                double unpaidQuantity = tmpItem.Quantity - tmpItem.QuantityPaid;
+                                if (item.Quantity >= unpaidQuantity)
+                                {
+                                    item.OrderItem.Status = 2;
+                                    item.OrderItem.QuantityPaid += item.Quantity;
+                                }
+                                else
+                                {
+                                    item.OrderItem.QuantityPaid += item.Quantity;
+                                }
+
+                            }
+                            payment.Status = 2;
+                            _db.SaveChanges();
                         }
-                        payment.Status = 2;
-                        _db.SaveChanges();
 
                         foreach (OrderItem item in payment.Order.OrderItems.Where(e => e.Deleted == false))
                         {

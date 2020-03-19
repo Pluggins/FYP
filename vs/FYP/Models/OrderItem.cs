@@ -23,6 +23,7 @@ namespace FYP.Models
          */
         public int Status { get; set; }
         public double Quantity { get; set; }
+        public double QuantityPaid { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal UnitPrice { get; set; }
         public double Remark { get; set; }
@@ -30,6 +31,7 @@ namespace FYP.Models
         public OrderItem()
         {
             Id = Guid.NewGuid().ToString();
+            QuantityPaid = 0;
             Quantity = 0;
             Status = 1;
         }

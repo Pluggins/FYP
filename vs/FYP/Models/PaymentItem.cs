@@ -13,13 +13,11 @@ namespace FYP.Models
         public virtual Payment Payment { get; set; }
         public virtual OrderItem OrderItem { get; set; }
         public double Quantity { get; set; }
-        public int Status { get; set; }
 
         public PaymentItem()
         {
             Id = Guid.NewGuid().ToString();
             Quantity = 0;
-            Status = 0;
         }
     }
 }

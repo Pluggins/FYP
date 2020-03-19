@@ -8,6 +8,7 @@ namespace FYP.Models.ViewModels
     public class PaymentInfoInput
     {
         public string OrderId { get; set; }
+        public List<PaymentInfoItem> OrderItems { get; set; }
     }
 
     public class PaymentInfoOutput
@@ -17,5 +18,11 @@ namespace FYP.Models.ViewModels
         public string PaymentLinkQR { get; set; }
         public string Result { get; set; }
         public decimal Amount { get; set; }
+    }
+
+    public class PaymentInfoItem
+    {
+        public string OrderItemId { get; set; }
+        public int Quantity { get; set; }
     }
 }
