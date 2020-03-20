@@ -11,7 +11,6 @@ namespace FYP.Controllers
     {
         public IActionResult Index()
         {
-            ViewBag.IsMobile = MobileService.fBrowserIsMobile(this);
             return View();
         }
     }

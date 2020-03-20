@@ -2,14 +2,12 @@
 @{
     ViewData["Title"] = "Index";
 }
-@if (ViewBag.IsMobile)
-{
-    <div style="padding:80px 0px; padding-bottom:10vh;">
+    <div class="d-block d-lg-none" style="padding:50px 0px; padding-bottom:70px;">
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
-                <form action="/" onsubmit="return register();">
-                    <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 45px; padding-bottom:30px;">
+                <form action="/" onsubmit="return register(this);">
+                    <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 40px; padding-bottom:30px;">
                         <div style="text-align: center; font-size: 36px;">Registration</div>
                         <div style="text-align:center; margin-bottom:20px;">Already registered? <a href="/Login">Click here</a> to login.</div>
                         <div style="font-size: 17px;margin-bottom: 5px;">
@@ -53,14 +51,11 @@
             <div class="col-1"></div>
         </div>
     </div>
-}
-else
-{
-    <div style="padding:80px 0px; padding-bottom:70px;">
+    <div class="d-none d-lg-block" style="padding:80px 0px; padding-bottom:70px;">
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6">
-                <form action="/" onsubmit="return register();">
+                <form action="/" onsubmit="return register(this);">
                     <div style="border: 2px dashed black; background-color:#fdd8c7; padding: 20px 80px; padding-bottom:30px;">
                         <div style="text-align: center; font-size: 36px;">Registration</div>
                         <div style="text-align:center; margin-bottom:20px;">Already registered? <a href="/Login">Click here</a> to login.</div>
@@ -105,6 +100,5 @@ else
             <div class="col-3"></div>
         </div>
     </div>
-}
 
 <script src="~/js/register.js"></script>

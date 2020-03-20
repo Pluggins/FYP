@@ -1,44 +1,47 @@
 ﻿var loggingIn = false;
-function login() {
+var targetEle;
+
+function login(ele) {
     if (!loggingIn) {
+        targetEle = ele;
         loggingIn = true;
-        $('#loginButton').html('<i class="fas fa-spinner fa-spin"></i>');
-        $('#loginButton').attr('class', 'btn btn-primary disabled');
+        $(targetEle).find('#loginButton').html('<i class="fas fa-spinner fa-spin"></i>');
+        $(targetEle).find('#loginButton').attr('class', 'btn btn-primary disabled');
         $.ajax({
             url: '/Api/User/WebLogin',
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             async: false,
-            data: JSON.stringify({ 'Email': $('#Email').val(), 'Password': $('#Password').val() }),
+            data: JSON.stringify({ 'Email': $(targetEle).find('#Email').val(), 'Password': $(targetEle).find('#Password').val() }),
             success: function (responds) {
                 if (responds.result == "OK") {
-                    $('#errorFrame').attr('style', 'display:none;')
-                    $('#loginButton').html('Logged In');
-                    $('#loginButton').attr('class', 'btn btn-success disabled');
+                    $(targetEle).find('#errorFrame').attr('style', 'display:none;')
+                    $(targetEle).find('#loginButton').html('Logged In');
+                    $(targetEle).find('#loginButton').attr('class', 'btn btn-success disabled');
                     checkUser();
                 } else if (responds.result == "FIELD_INCOMPLETE") {
-                    $('#loginButton').html('Login Now');
-                    $('#errorFrame').removeAttr('style');
-                    $('#loginButton').attr('class', 'btn btn-primary');
-                    $('#errorMsg').html('Error: Please login with your email and password.')
+                    $(targetEle).find('#loginButton').html('Login Now');
+                    $(targetEle).find('#errorFrame').removeAttr('style');
+                    $(targetEle).find('#loginButton').attr('class', 'btn btn-primary');
+                    $(targetEle).find('#errorMsg').html('Error: Please login with your email and password.')
                     loggingIn = false;
                 } else if (responds.result == "USER_NOT_FOUND") {
-                    $('#loginButton').html('Login Now');
-                    $('#errorFrame').removeAttr('style');
-                    $('#loginButton').attr('class', 'btn btn-primary');
-                    $('#errorMsg').html('Error: Email/password do not match.')
+                    $(targetEle).find('#loginButton').html('Login Now');
+                    $(targetEle).find('#errorFrame').removeAttr('style');
+                    $(targetEle).find('#loginButton').attr('class', 'btn btn-primary');
+                    $(targetEle).find('#errorMsg').html('Error: Email/password do not match.')
                     loggingIn = false;
                 } else if (responds.result == "PASSWORD_MISMATCH") {
-                    $('#loginButton').html('Login Now');
-                    $('#errorFrame').removeAttr('style');
-                    $('#loginButton').attr('class', 'btn btn-primary');
-                    $('#errorMsg').html('Error: Email/password do not match.')
+                    $(targetEle).find('#loginButton').html('Login Now');
+                    $(targetEle).find('#errorFrame').removeAttr('style');
+                    $(targetEle).find('#loginButton').attr('class', 'btn btn-primary');
+                    $(targetEle).find('#errorMsg').html('Error: Email/password do not match.')
                     loggingIn = false;
                 }
             },
             error: function () {
-                $('#loginButton').html('Login Now');
+                $(targetEle).find('#loginButton').html('Login Now');
             }
         });
         return false;
