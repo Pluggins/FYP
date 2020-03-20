@@ -11,7 +11,7 @@ namespace FYP.Controllers
     {
         public IActionResult Index()
         {
-            ViewBag.IsMobile = MobileDetectService.IsMobile(this);
+            ViewBag.IsMobile = MobileService.fBrowserIsMobile(this);
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");

@@ -290,5 +290,55 @@ namespace FYP.Controllers.Api
 
             return output;
         }
+
+        [HttpPost]
+        [Route("Api/User/GetDetailBySessionId")]
+        public UserInfoOutput GetDetailBySessionId([FromBody] UserInfoInput input)
+        {
+            UserInfoOutput output = new UserInfoOutput();
+            
+            if (input == null)
+            {
+                output.Result = "INPUT_IS_NULL";
+            } else
+            {
+                AppLoginSession session = _db.AppLoginSessions.Where(e => e.Id.Equals(input.SessionId) && e.Status == 1).FirstOrDefault();
+
+                if (session == null)
+                {
+                    output.Result = "SESSION_NOT_EXIST";
+                } else
+                {
+                    if (session.Key.Equals(input.SessionKey))
+                    {
+                        User user = session.User;
+                        List<Order> orders = user.ListOrders.Where(e => e.Deleted == false).OrderByDescending(e => e.DateCreated).ToList();
+                        List<OrderPreviousItem> newOrders = new List<OrderPreviousItem>();
+
+                        foreach (Order item in orders)
+                        {
+                            OrderPreviousItem newItem = new OrderPreviousItem()
+                            {
+                                OrderId = item.Id,
+                                OrderDate = item.DateCreated.ToString(),
+                                Price = item.Amount
+                            };
+                            newOrders.Add(newItem);
+                        }
+
+                        output.Orders = newOrders;
+                        output.UserEmail = user.Email;
+                        output.UserName = user.FName + user.LName;
+                        output.DateJoined = user.DateCreated.ToString();
+                        output.Result = "OK";
+                    } else
+                    {
+                        output.Result = "CREDENTIAL_ERROR";
+                    }
+                }
+            }
+
+            return output;
+        }
     }
 }
