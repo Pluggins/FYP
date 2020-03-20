@@ -31,7 +31,7 @@ namespace FYP.Controllers
                 return RedirectToAction("Index", "Order");
             } else
             {
-                AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                AspUserService aspUser = new AspUserService(_db, this);
                 Order order = _db.Orders.Where(e => e.Id.Equals(id) && e.Deleted == false).FirstOrDefault();
 
                 if (order.Vendor.Owner == aspUser.User || aspUser.IsStaff)

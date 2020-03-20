@@ -30,7 +30,7 @@ namespace FYP.Controllers
             ViewBag.Nav = 2;
             MenuItemListViewModel model = new MenuItemListViewModel();
             model.Menu = _db.Menus.Where(e => e.Id.Equals(id) && e.Deleted == false).FirstOrDefault();
-            AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService userService = new AspUserService(_db, this);
             if (model.Menu == null)
             {
                 return RedirectToAction("Index", "Menu");

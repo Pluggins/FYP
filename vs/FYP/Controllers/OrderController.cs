@@ -24,7 +24,7 @@ namespace FYP.Controllers
 
         public IActionResult Index()
         {
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             List<Vendor> vendorList = aspUser.User.ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
             if (vendorList.Count == 0)
             {
@@ -41,7 +41,7 @@ namespace FYP.Controllers
         {
             ViewBag.Nav = 3;
             OrderListViewModel model = new OrderListViewModel();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             List<Vendor> vendorList = aspUser.User.ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
 
             model.VendorList = vendorList;

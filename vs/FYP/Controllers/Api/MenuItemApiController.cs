@@ -29,7 +29,7 @@ namespace FYP.Controllers.Api
         public CreateMenuItemOutput CreateMenuItem([FromBody] CreateMenuItemInput input)
         {
             CreateMenuItemOutput output = new CreateMenuItemOutput();
-            AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService userService = new AspUserService(_db, this);
             Menu menu = _db.Menus.Where(e => e.Id.Equals(input.MenuId) && e.Deleted == false).FirstOrDefault();
             
             if (menu == null)
@@ -75,7 +75,7 @@ namespace FYP.Controllers.Api
             if (!string.IsNullOrEmpty(input.MenuItemId))
             {
                 MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(input.MenuItemId)).FirstOrDefault();
-                AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                AspUserService userService = new AspUserService(_db, this);
                 
                 if (menuItem == null)
                 {
@@ -109,7 +109,7 @@ namespace FYP.Controllers.Api
             if (!string.IsNullOrEmpty(input.MenuItemId))
             {
                 MenuItem menuItem = _db.MenuItems.Where(e => e.Id.Equals(input.MenuItemId)).FirstOrDefault();
-                AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                AspUserService userService = new AspUserService(_db, this);
 
                 if (menuItem == null)
                 {

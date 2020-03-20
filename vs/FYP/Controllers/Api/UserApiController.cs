@@ -156,7 +156,7 @@ namespace FYP.Controllers.Api
         [Route("Api/User/CheckStaffRole")]
         public async Task<bool> CheckStaffRole()
         {
-            AspUserService userService = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService userService = new AspUserService(_db, this);
             IdentityUser identityUser = _db._AspNetUsers.Where(e => e.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault();
 
             if (userService.IsStaff)
@@ -224,9 +224,9 @@ namespace FYP.Controllers.Api
         [Route("Api/User/RetrieveTempStore")]
         public bool RetrieveTempStore()
         {
-            var id = Request.Cookies["CaptureId"];
-            var code = Request.Cookies["CaptureCode"];
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            string id = Request.Cookies["CaptureId"].ToString();
+            string code = Request.Cookies["CaptureCode"].ToString();
+            AspUserService aspUser = new AspUserService(_db, this);
 
             if (id != null && code != null && aspUser.IsValid)
             {

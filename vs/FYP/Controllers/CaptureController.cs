@@ -24,11 +24,12 @@ namespace FYP.Controllers
         {
             /*
              * ViewBag status
-             *  1 - Capture detail not found
-             *  2 - Capture not exist
+             *  1 - Capture detail not found (error)
+             *  2 - QR Expired
              *  3 - Detail updated to existing session
              *  4 - New session added to client
              *  5 - Detail captured to server
+             *  6 - No capture registered (no initial capture)
              */
             if (string.IsNullOrEmpty(CaptureId) || string.IsNullOrEmpty(CaptureCode))
             {
@@ -44,7 +45,7 @@ namespace FYP.Controllers
                 {
                     if (capture.Status == 1)
                     {
-                        AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                        AspUserService aspUser = new AspUserService(_db, this);
                         
                         if (capture.Type == 1)
                         {
@@ -75,7 +76,7 @@ namespace FYP.Controllers
                             {
                                 if (Request.Cookies["CaptureId"] != null && Request.Cookies["CaptureCode"] != null)
                                 {
-                                    MemberCapture existingCapture = _db.MemberCaptures.Where(e => e.Id.Equals(Request.Cookies["CaptureId"].ToString()) && e.Code.Equals(Request.Cookies["CaptureCode"].ToString()) && e.Deleted == false && e.Status == 1).FirstOrDefault();
+                                    MemberCapture existingCapture = _db.MemberCaptures.Where(e => e.Id.Equals(Request.Cookies["CaptureId"].ToString()) && e.Code.Equals(Request.Cookies["CaptureCode"].ToString()) && e.Deleted == false && e.Status == 2).FirstOrDefault();
 
                                     if (existingCapture == null)
                                     {
@@ -93,7 +94,7 @@ namespace FYP.Controllers
                                 }
                                 else
                                 {
-                                    ViewBag.Status = 1;
+                                    ViewBag.Status = 6;
                                 }
                             }
                         }

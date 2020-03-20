@@ -28,7 +28,7 @@ namespace FYP.Controllers.Api
         public CreateVendorOutput Index([FromBody] CreateVendorInput input)
         {
             CreateVendorOutput output = new CreateVendorOutput();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             if (!aspUser.IsStaff)
             {
                 output.Result = "NO_PRIVILEGE";
@@ -68,7 +68,7 @@ namespace FYP.Controllers.Api
         public VendorCheckUserOutput CheckUser([FromBody] VendorCheckUserInput input)
         {
             VendorCheckUserOutput output = new VendorCheckUserOutput();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             if (!aspUser.IsStaff)
             {
                 output.Result = "NO_PRIVILEGE";
@@ -94,7 +94,7 @@ namespace FYP.Controllers.Api
         public VendorInfoOutput RetrieveById([FromBody] VendorInfoInput input)
         {
             VendorInfoOutput output = new VendorInfoOutput();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             if (!aspUser.IsStaff)
             {
                 output.Result = "NO_PRIVILEGE";
@@ -119,7 +119,7 @@ namespace FYP.Controllers.Api
         public VendorInfoOutput DeleteById([FromBody] VendorInfoInput input)
         {
             VendorInfoOutput output = new VendorInfoOutput();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             if (!aspUser.IsStaff)
             {
                 output.Result = "NO_PRIVILEGE";

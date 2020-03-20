@@ -29,7 +29,7 @@ namespace FYP.Controllers.Api
         {
             RetrieveMenuListOutput output = new RetrieveMenuListOutput();
             List<MenuItemOutput> items = new List<MenuItemOutput>();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             if (input != null)
             {
                 Vendor vendor = _db.Vendors.Where(e => e.Id.Equals(input.VendorId) && e.Deleted == false).FirstOrDefault();
@@ -70,7 +70,7 @@ namespace FYP.Controllers.Api
         public CreateMenuOutput CreateMenu([FromBody] CreateMenuInput input)
         {
             Vendor vendor = _db.Vendors.Where(e => e.Id.Equals(input.VendorId) && e.Deleted == false).FirstOrDefault();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             CreateMenuOutput output = new CreateMenuOutput();
 
             if (vendor == null)
@@ -103,7 +103,7 @@ namespace FYP.Controllers.Api
         public MenuInfoOutput RetrieveById([FromBody] MenuInfoInput input)
         {
             Menu menu = _db.Menus.Where(e => e.Id.Equals(input.MenuId) && e.Deleted == false).FirstOrDefault();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             MenuInfoOutput output = new MenuInfoOutput();
 
             if (menu == null)
@@ -131,7 +131,7 @@ namespace FYP.Controllers.Api
         public MenuInfoOutput DeleteMenu([FromBody] MenuInfoInput input)
         {
             Menu menu = _db.Menus.Where(e => e.Id.Equals(input.MenuId) && e.Deleted == false).FirstOrDefault();
-            AspUserService aspUser = new AspUserService(_db, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            AspUserService aspUser = new AspUserService(_db, this);
             MenuInfoOutput output = new MenuInfoOutput();
 
             if (menu == null)

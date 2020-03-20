@@ -11,7 +11,13 @@ namespace FYP.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            } else
+            {
+                return View();
+            }
         }
     }
 }
