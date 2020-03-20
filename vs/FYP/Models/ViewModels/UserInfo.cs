@@ -15,6 +15,7 @@ namespace FYP.Models.ViewModels
         public string UserEmail { get; set; }
         public string UserName { get; set; }
         public string DateJoined { get; set; }
+        public bool IsMember { get; set; }
         public List<OrderPreviousItem> Orders { get; set; }
         public string Result { get; set; }
     }

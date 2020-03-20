@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -316,6 +317,8 @@ namespace FYP.Controllers.Api
                         User user = session.User;
                         List<Order> orders = user.ListOrders.Where(e => e.Deleted == false).OrderByDescending(e => e.DateCreated).ToList();
                         List<OrderPreviousItem> newOrders = new List<OrderPreviousItem>();
+                        NumberFormatInfo nfi = new CultureInfo("ms-MY", false).NumberFormat;
+                        nfi.CurrencyDecimalDigits = 2;
 
                         foreach (Order item in orders)
                         {
@@ -323,11 +326,18 @@ namespace FYP.Controllers.Api
                             {
                                 OrderId = item.Id,
                                 OrderDate = item.DateCreated.ToString(),
-                                Price = item.Amount
+                                Price = item.Amount.ToString("C", nfi)
                             };
                             newOrders.Add(newItem);
                         }
 
+                        if (string.IsNullOrEmpty(user.Email))
+                        {
+                            output.IsMember = false;
+                        } else
+                        {
+                            output.IsMember = true;
+                        }
                         output.Orders = newOrders;
                         output.UserEmail = user.Email;
                         output.UserName = user.FName + user.LName;

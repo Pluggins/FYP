@@ -9,6 +9,6 @@ namespace FYP.Models.ViewModels
     {
         public string OrderId { get; set; }
         public string OrderDate { get; set; }
-        public decimal Price { get; set; }
+        public string Price { get; set; }
     }
 }
