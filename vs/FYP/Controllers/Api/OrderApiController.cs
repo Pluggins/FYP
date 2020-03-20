@@ -323,5 +323,53 @@ namespace FYP.Controllers.Api
             }
             return output;
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Api/Order/RetrieveOrderItemsByOrderId")]
+        public OrderInfoOutput RetrieveOrderItemsByOrderId([FromBody] OrderInfoInput input)
+        {
+            OrderInfoOutput output = new OrderInfoOutput();
+
+            if (input == null)
+            {
+                output.Result = "INPUT_IS_NULL";
+            } else
+            {
+                Order order = _db.Orders.Where(e => e.Id.Equals(input.OrderId) && e.Deleted == false).FirstOrDefault();
+                
+                if (order == null)
+                {
+                    output.Result = "ORDER_NOT_EXIST";
+                } else
+                {
+                    List<OrderInfoItem> newItems = new List<OrderInfoItem>();
+                    foreach (OrderItem item in order.OrderItems.Where(e => e.Deleted == false).ToList())
+                    {
+                        OrderInfoItem checkItem = newItems.Where(e => e.OrderItemId.Equals(item.Id)).FirstOrDefault();
+                        if (checkItem != null)
+                        {
+                            checkItem.Quantity += item.Quantity;
+                        } else
+                        {
+                            OrderInfoItem newItem = new OrderInfoItem()
+                            {
+                                Name = item.MenuItem.Name,
+                                OrderItemId = item.Id,
+                                OrderItemUnitPrice = item.UnitPrice,
+                                Quantity = item.Quantity,
+                                Status = 2
+                            };
+                            newItems.Add(newItem);
+                        }
+                    }
+
+                    output.Items = newItems;
+                    output.Result = "OK";
+                }
+            }
+
+            return output;
+        }
     }
 }

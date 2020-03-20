@@ -250,6 +250,8 @@ namespace FYP.Controllers.Api
                             {
                                 Expires = DateTime.UtcNow
                             });
+                        capture.AppLoginSession.User.Status = 0;
+                        capture.AppLoginSession.User.Deleted = true;
                         capture.Status = 0;
                         _db.SaveChanges();
                     }

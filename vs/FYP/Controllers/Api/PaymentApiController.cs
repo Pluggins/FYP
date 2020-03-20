@@ -243,6 +243,8 @@ namespace FYP.Controllers.Api
                         
                         if (paidAll)
                         {
+                            payment.Order.Status = 2;
+                            _db.SaveChanges();
                             output.PaidAll = true;
                         } else
                         {
