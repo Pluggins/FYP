@@ -171,7 +171,8 @@ namespace FYP.Controllers.Api
                                 Name = item.Name,
                                 ShortDesc = item.ShortDesc,
                                 LongDesc = item.LongDesc,
-                                Price = item.Price.ToString("C", nfi),
+                                Price = item.Price.ToString(),
+                                DisplayPrice = item.Price.ToString("C", nfi),
                                 ImgUrl = item.ImgUrl,
                                 WaitingTime = item.WaitingTime
                             };

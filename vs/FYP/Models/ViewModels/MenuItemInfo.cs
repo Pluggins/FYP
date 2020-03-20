@@ -12,6 +12,7 @@ namespace FYP.Models.ViewModels
         public string ShortDesc { get; set; }
         public string LongDesc { get; set; }
         public string Price { get; set; }
+        public string DisplayPrice { get; set; }
         public string ImgUrl { get; set; }
         public string WaitingTime { get; set; }
     }

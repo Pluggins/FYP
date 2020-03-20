@@ -17,6 +17,11 @@ namespace FYP.Models
         public string Id { get; set; }
         public string Key { get; set; }
         public virtual User User { get; set; }
+        /*
+         * Status
+         * 1 - Active
+         * 2 - Member User
+         */
         public int Status { get; set; }
         public DateTime DateCreated { get; set; }
         public string IpAddress { get; set; }
