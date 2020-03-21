@@ -356,6 +356,7 @@ namespace FYP.Controllers.Api
                             {
                                 Name = item.MenuItem.Name,
                                 OrderItemId = item.Id,
+                                MenuItemId = item.MenuItem.Id,
                                 OrderItemUnitPrice = item.UnitPrice,
                                 Quantity = item.Quantity,
                                 Status = 2

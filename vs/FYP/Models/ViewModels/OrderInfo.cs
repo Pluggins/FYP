@@ -18,6 +18,7 @@ namespace FYP.Models.ViewModels
     public class OrderInfoItem
     {
         public string OrderItemId { get; set; }
+        public string MenuItemId { get; set; }
         public decimal OrderItemUnitPrice { get; set; }
         public string Name { get; set; }
         public double Quantity { get; set; }
