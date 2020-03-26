@@ -225,8 +225,15 @@ namespace FYP.Controllers.Api
         [Route("Api/User/RetrieveTempStore")]
         public bool RetrieveTempStore()
         {
-            string id = Request.Cookies["CaptureId"].ToString();
-            string code = Request.Cookies["CaptureCode"].ToString();
+            string id = null;
+            string code = null;
+            
+            if (Request.Cookies["CaptureId"] != null && Request.Cookies["CaptureCode"] != null)
+            {
+                id = Request.Cookies["CaptureId"].ToString();
+                code = Request.Cookies["CaptureCode"].ToString();
+            }
+            
             AspUserService aspUser = new AspUserService(_db, this);
 
             if (id != null && code != null && aspUser.IsValid)
