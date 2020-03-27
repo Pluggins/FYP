@@ -47,7 +47,6 @@
                     <th>Order ID</th>
                     <th>Order Date</th>
                     <th>Order Amount</th>
-                    <th>Option</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,7 +56,6 @@
                     <td><a href="/OrderItem/@item.Id">@item.Id</a></td>
                     <td>@item.DateCreated</td>
                     <td>@item.Amount.ToString("C",nfi)</td>
-                    <td><button class="btn btn-danger" id="m-@item.Id" onclick="deleteOrder('@item.Id',this)">Delete</button></td>
                 </tr>
                 }
             </tbody>
@@ -134,12 +132,11 @@
 
     $(document).ready(function () {
         $('#menuList').DataTable({
-            'order': [[3, "asc"]],
+            'order': [[2, "asc"]],
             "columnDefs": [
                 { "width": "300px", "targets": 0 },
                 { "width": "150px", "targets": 1 },
-                { "width": "100px", "targets": 2 },
-                { "width": "20px", "targets": 3 }
+                { "width": "100px", "targets": 2 }
             ],
         });
     });

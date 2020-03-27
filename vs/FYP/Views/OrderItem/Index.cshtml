@@ -21,7 +21,6 @@
                     <th>Item Name</th>
                     <th>Quantity</th>
                     <th>Price/unit</th>
-                    <th>Option</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +30,6 @@
                         <td>@item.MenuItem.Name</td>
                         <td>@item.Quantity</td>
                         <td>@item.UnitPrice.ToString("C", nfi)</td>
-                        <td><button class="btn btn-danger" id="m-@item.Id" onclick="deleteOrder('@item.Id',this)">Delete</button></td>
                     </tr>
                 }
             </tbody>
@@ -106,12 +104,11 @@
 <script>
     $(document).ready(function () {
         $('#orderItemList').DataTable({
-            'order': [[3, "asc"]],
+            'order': [[2, "asc"]],
             "columnDefs": [
                 { "width": "300px", "targets": 0 },
                 { "width": "150px", "targets": 1 },
-                { "width": "100px", "targets": 2 },
-                { "width": "20px", "targets": 3 }
+                { "width": "100px", "targets": 2 }
             ],
         });
     });
