@@ -55,6 +55,7 @@ namespace FYP.Controllers.Api
                             CreatedBy = aspUser.User.Id
                         };
                         _db.Vendors.Add(vendor);
+                        user.Status = 2;
                         _db.SaveChanges();
                         output.Result = "OK";
                     }
