@@ -30,9 +30,12 @@ namespace FYP.Controllers
             if (User.IsInRole("Staff"))
             {
                 return RedirectToAction("Index", "Vendor");
-            } else
+            } else if (User.IsInRole("Vendor"))
             {
                 return RedirectToAction("Index", "Menu");
+            } else
+            {
+                return RedirectToAction("Index", "MyOrder");
             }
         }
 

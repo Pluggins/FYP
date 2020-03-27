@@ -33,6 +33,8 @@
                             <li class="nav-item @(ViewBag.Nav == 2 ? "active" : null)"><a href="/Menu" class="nav-link">Menus</a></li>
                             <li class="nav-item @(ViewBag.Nav == 3 ? "active" : null)"><a href="/Order" class="nav-link">Orders</a></li>
                         }
+
+                        <li class="nav-item @(ViewBag.Nav == 4 ? "active" : null)"><a href="/MyOrder" class="nav-link">MyOrders</a></li>
                     }
 
                     @if (User.Identity.IsAuthenticated)

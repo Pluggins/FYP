@@ -24,33 +24,46 @@ namespace FYP.Controllers
 
         public IActionResult Index()
         {
-            List<Vendor> vendorList = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
-            if (vendorList.Count == 0)
+            if (User.IsInRole("Vendor"))
             {
-                ViewBag.Nav = 2;
-                return View();
+                List<Vendor> vendorList = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
+                if (vendorList.Count == 0)
+                {
+                    ViewBag.Nav = 2;
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Edit", "Menu", new { id = vendorList.First().Id });
+                }
             } else
             {
-                return RedirectToAction("Edit", "Menu", new { id = vendorList.First().Id });
+                return RedirectToAction("Index", "Home");
             }
-            
         }
 
         [Route("Menu/{id}")]
         public IActionResult Edit(string id) 
         {
-            Vendor vendor = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Id.Equals(id) && e.Deleted == false).FirstOrDefault();
-            if (vendor == null)
+            if (User.IsInRole("Vendor"))
             {
-                return RedirectToAction("Index", "Menu");
+                Vendor vendor = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Id.Equals(id) && e.Deleted == false).FirstOrDefault();
+                if (vendor == null)
+                {
+                    return RedirectToAction("Index", "Menu");
+                }
+                else
+                {
+                    ViewBag.Nav = 2;
+                    MenuListViewModel model = new MenuListViewModel();
+                    model.SelectedVendor = vendor;
+                    model.Vendors = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.DateCreated).ToList();
+                    model.Menus = vendor.Menus.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
+                    return View(model);
+                }
             } else
             {
-                ViewBag.Nav = 2;
-                MenuListViewModel model = new MenuListViewModel();
-                model.SelectedVendor = vendor;
-                model.Vendors = _db._Users.Where(e => e.AspNetUser.Id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))).FirstOrDefault().ListVendors.Where(e => e.Deleted == false).OrderBy(e => e.DateCreated).ToList();
-                model.Menus =  vendor.Menus.Where(e => e.Deleted == false).OrderBy(e => e.Name).ToList();
-                return View(model);
+                return RedirectToAction("Index", "Home");
             }
         }
     }
