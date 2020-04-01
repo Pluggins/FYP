@@ -32,7 +32,7 @@
                 {
                     <tr>
                         <td><a href="/MyOrder/@item.Id">@item.Id</a></td>
-                        <td>@item.DateCreated</td>
+                        <td>@item.DateCreated.ToString("MM/dd/yy h:mm tt")</td>
                         <td>@item.Amount.ToString("C", nfi)</td>
                     </tr>
                 }

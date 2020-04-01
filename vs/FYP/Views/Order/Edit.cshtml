@@ -47,6 +47,7 @@
                     <th>Order ID</th>
                     <th>Order Date</th>
                     <th>Order Amount</th>
+                    <th>Order Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,8 +55,22 @@
                 {
                 <tr>
                     <td><a href="/OrderItem/@item.Id">@item.Id</a></td>
-                    <td>@item.DateCreated</td>
+                    <td>@item.DateCreated.ToString("MM/dd/yy h:mm tt")</td>
                     <td>@item.Amount.ToString("C",nfi)</td>
+                    <td>
+                        @if (item.Status == 0)
+                        {
+                            <span>Closed</span>
+                        }
+                        else if (item.Status == 1)
+                        {
+                            <span>Active</span>
+                        }
+                        else if (item.Status == 2)
+                        {
+                            <span>Paid</span>
+                        }
+                    </td>
                 </tr>
                 }
             </tbody>
@@ -136,7 +151,8 @@
             "columnDefs": [
                 { "width": "300px", "targets": 0 },
                 { "width": "150px", "targets": 1 },
-                { "width": "100px", "targets": 2 }
+                { "width": "100px", "targets": 2 },
+                { "width": "100px", "targets": 3 }
             ],
         });
     });
