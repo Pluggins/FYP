@@ -50,5 +50,45 @@ namespace FYP.Controllers
             
             return View(model);
         }
+
+        [Route("/Order/Payment/{id}")]
+        public IActionResult ViewPayment(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return RedirectToAction("Index", "Order");
+            } else
+            {
+                Order order = _db.Orders.Where(e => e.Id.Equals(id) && e.Deleted == false).FirstOrDefault();
+                AspUserService aspUser = new AspUserService(_db, this);
+                if (order == null)
+                {
+                    return RedirectToAction("Index", "Order");
+                } else
+                {
+                    if (order.Vendor.Owner != aspUser.User)
+                    {
+                        return RedirectToAction("Index", "Order");
+                    } else
+                    {
+                        List<Payment> payments = new List<Payment>();
+
+                        foreach(Payment item in order.Payments.Where(e => e.Deleted == false))
+                        {
+                            payments.Add(item);
+                        }
+
+                        OrderPaymentViewModel model = new OrderPaymentViewModel()
+                        {
+                            SelectedVendor = order.Vendor,
+                            Order = order,
+                            Payments = payments
+                        };
+
+                        return View(model);
+                    }
+                }
+            }
+        }
     }
 }

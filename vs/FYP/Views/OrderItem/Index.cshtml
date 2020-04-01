@@ -13,7 +13,9 @@
 </div>
 <div style="padding:30px 50px;">
     <div class="bread-crumb"><span><a href="/Order">Orders</a></span><span class="bread-separator">-></span><span><a href="/Order/@Model.SelectedVendor.Id">@Model.SelectedVendor.Name</a></span><span class="bread-separator">-></span><span class="bread-target"><a href="/OrderItem/@Model.Order.Id">@Model.Order.Id</a></span></div>
-
+    <div style="height:50px;">
+        <div class="btn btn-primary" style="float:right;" onclick="viewPayment();">View Payment</div>
+    </div>
     <div>
         <table class="table table-striped table-bordered" style="background-color:white;" id="orderItemList">
             <thead>
@@ -102,6 +104,8 @@
 </div>
 
 <script>
+    var orderId = '@Model.Order.Id';
+
     $(document).ready(function () {
         $('#orderItemList').DataTable({
             'order': [[0, "asc"]],
@@ -112,4 +116,8 @@
             ],
         });
     });
+
+    function viewPayment(ele) {
+        window.location.href = "/Order/Payment/" + orderId;
+    }
 </script>
