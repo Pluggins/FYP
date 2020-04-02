@@ -11,6 +11,13 @@ namespace FYP.Models.ViewModels
         public string ItemName { get; set; }
         public string Price { get; set; }
         public string Desc { get; set; }
+        public double WaitingTime { get; set; }
+        public string ImgUrl { get; set; }
+
+        public CreateMenuItemInput()
+        {
+            WaitingTime = 0;
+        }
     }
 
     public class CreateMenuItemOutput

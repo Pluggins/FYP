@@ -47,7 +47,9 @@ namespace FYP.Controllers.Api
                             Name = input.ItemName,
                             ShortDesc = input.Desc,
                             Menu = menu,
-                            Price = inputPrice
+                            Price = inputPrice,
+                            WaitingTime = input.WaitingTime,
+                            ImgUrl = input.ImgUrl
                         };
 
                         _db.MenuItems.Add(newItem);
@@ -173,8 +175,8 @@ namespace FYP.Controllers.Api
                                 LongDesc = item.LongDesc,
                                 Price = item.Price.ToString(),
                                 DisplayPrice = item.Price.ToString("C", nfi),
-                                ImgUrl = item.ImgUrl,
-                                WaitingTime = item.WaitingTime
+                                WaitingTime = item.WaitingTime.ToString("N1"),
+                                ImgUrl = item.ImgUrl
                             };
                             newMenuItemList.Add(menuItem);
                         }

@@ -46,3 +46,16 @@
         </table>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#orderItemList').DataTable({
+            'order': [[0, "desc"]],
+            "columnDefs": [
+                { "width": "300px", "targets": 0 },
+                { "width": "150px", "targets": 1 },
+                { "width": "100px", "targets": 2 }
+            ],
+        });
+    });
+</script>

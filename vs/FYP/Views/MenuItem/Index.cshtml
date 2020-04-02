@@ -74,6 +74,10 @@
                             <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item1.Id" onclick="removeItem('@item1.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
                         </div>
                         <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                            @if (!string.IsNullOrEmpty(item1.ImgUrl))
+                            {
+                                <img src="/@item1.ImgUrl" style="width:100%; max-height:100%; vertical-align:middle; display:block;" />
+                            }
                         </div>
                         <div class="item-label-box">
                             <div class="item-label">
@@ -91,6 +95,10 @@
                             <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item2.Id" onclick="removeItem('@item2.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
                         </div>
                         <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                            @if (!string.IsNullOrEmpty(item2.ImgUrl))
+                            {
+                            <img src="/@item2.ImgUrl" style="width:100%; max-height:100%; vertical-align:middle; display:block;" />
+                            }
                         </div>
                         <div class="item-label-box">
                             <div class="item-label">
@@ -109,6 +117,10 @@
                             <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item3.Id" onclick="removeItem('@item3.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
                         </div>
                         <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                            @if (!string.IsNullOrEmpty(item3.ImgUrl))
+                            {
+                            <img src="/@item3.ImgUrl" style="width:100%; max-height:100%; vertical-align:middle; display:block;" />
+                            }
                         </div>
                         <div class="item-label-box">
                             <div class="item-label">
@@ -127,6 +139,10 @@
                             <div class="btn btn-danger btn-circle btn-circle-sm btn-icon" id="ele-@item4.Id" onclick="removeItem('@item4.Id', this)"><i class="fas fa-minus" style="font-size:15px;"></i></div>
                         </div>
                         <div style="position:absolute; width:90%; height:200px; background-color:black; left:5%; top:4%; z-index:5;">
+                            @if (!string.IsNullOrEmpty(item4.ImgUrl))
+                            {
+                            <img src="/@item4.ImgUrl" style="width:100%; max-height:100%; vertical-align:middle; display:block;" />
+                            }
                         </div>
                         <div class="item-label-box">
                             <div class="item-label">
@@ -170,6 +186,14 @@
                                 <div>
                                     <label for="Desc">Description:</label>
                                     <textarea class="form-control" id="Desc"></textarea>
+                                </div>
+                                <div>
+                                    <label for="Desc">Waiting Time:</label>
+                                    <input class="form-control" id="Waiting" type="text" />
+                                </div>
+                                <div>
+                                    <label for="Desc">Image Upload:</label>
+                                    <input class="form-control" id="Img" type="file" onchange="uploadImg();" />
                                 </div>
                             </div>
                             <div id="errorFrame" style="display:none;">
@@ -217,5 +241,28 @@
 </div>
 <script>
     var menuId = '@Model.Menu.Id';
+    var imgUrl;
+
+    function uploadImg() {
+        var formData = new FormData();
+        var data = document.getElementById('Img');
+        formData.append('base64image', data.files[0]);
+        addingRoom = true;
+        $.ajax({
+            type: 'POST',
+            url: '/Api/Image/UploadImage',
+            data: formData,
+            processData: false,
+            contentType: false,
+            async: false,
+            success: function (data) {
+                imgReady = true;
+                imgUrl = data.url;
+            },
+            error: function (data) {
+            }
+        });
+    }
+
 </script>
 <script src="~/js/menuitem.js"></script>

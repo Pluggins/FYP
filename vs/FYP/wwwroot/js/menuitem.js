@@ -31,7 +31,7 @@ function initiateCreateNewItem() {
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 async: false,
-                data: JSON.stringify({ 'MenuId': menuId, 'ItemName': $('#Name').val(), 'Price': $('#Price').val(), 'Desc': $('#Desc').val() }),
+                data: JSON.stringify({ 'MenuId': menuId, 'ItemName': $('#Name').val(), 'Price': $('#Price').val(), 'Desc': $('#Desc').val(), 'WaitingTime': $('#Waiting').val(), 'ImgUrl': imgUrl }),
                 success: function (responds) {
                     if (responds.result == "OK") {
                         $('#createItemButton').attr('class', 'btn btn-success disabled');
